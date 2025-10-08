@@ -1,0 +1,7 @@
+# --- CODEOWNERS ---
+
+# Archivos raíz (README, .gitignore, etc.)
+/*      @jonmeister     @ruizisabella
+
+# Frontend 
+#/frontend/* @frontend-dev
