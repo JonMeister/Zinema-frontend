@@ -1,0 +1,15 @@
+// Global styles - Only tokens, mixins, base styles and accessibility
+@use './tokens' as *;
+@use './base';
+@use './a11y';
+
+:root {
+  --color-bg: #{$color-bg};
+  --color-fg: #{$color-fg};
+  --color-accent: #{$color-accent};
+  --space-1: #{$space-1};
+  --space-2: #{$space-2};
+  --space-3: #{$space-3};
+  --space-4: #{$space-4};
+  --radius-sm: #{$radius-sm};
+}

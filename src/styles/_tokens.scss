@@ -1,0 +1,56 @@
+// Core palette
+// Background of the app (body)
+$color-bg: #0b0b0c;
+// Default foreground text color
+$color-fg: #f5f6f7;
+// Brand accent for CTAs, focus, and primary buttons
+$color-accent: #7c4dff;
+// Light text used on hero/landing and dark overlays
+$color-hero-text: #f5e7ff;
+// Light brand text (logo wordmark, titles)
+$color-logo-text: #f1d9ff;
+// Button filled/background accent
+$color-button-accent: #a66bff;
+// Button filled/text color on accent backgrounds
+$color-button-text: #2b0c59;
+// Overlays and effects
+// Strong translucent dark panel (containers/footer)
+$overlay-strong: rgba(0, 0, 0, 0.7);
+// Subtle translucent white overlay
+$overlay-soft: rgba(255, 255, 255, 0.1);
+// Big soft shadow for images/cards
+$shadow-xl: 0 20px 60px rgba(0, 0, 0, 0.45);
+
+// Gradient stops (landing/signup backgrounds)
+$grad-1: #4b257d;
+$grad-2: #2a144f;
+$grad-3: #24103f;
+
+// Semantic helpers
+// Subtle hairline borders for panels on dark bg
+$border-subtle: rgba(255, 255, 255, 0.1);
+// Inverse text (on dark/brand surfaces)
+$text-inverse: #ffffff;
+// Light ghost text (ghost buttons, subtle labels)
+$text-ghost: #f2dfff;
+// Muted text for placeholders/help
+$text-muted: rgba(245, 231, 255, 0.6);
+// Muted placeholder variant
+$text-placeholder: rgba(245, 231, 255, 0.5);
+
+// Spacing scale
+$space-1: 0.25rem; // 4px
+$space-2: 0.5rem;  // 8px
+$space-3: 1rem;    // 16px
+$space-4: 1.5rem;  // 24px
+
+// Radii
+$radius-sm: 0.25rem;
+$radius-md: 0.5rem;
+$radius-lg: 1rem;
+
+// Breakpoints
+$bp-md: 768px;
+$bp-lg: 1024px;
+
+
