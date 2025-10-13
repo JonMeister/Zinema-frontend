@@ -9,6 +9,8 @@ import React from 'react';
 import { LandingPage } from '@/modules/landing/components/LandingPage';
 import { SignupPage } from '@/modules/auth/components/SignupPage';
 import { LoginPage } from '@/modules/auth/components/LoginPage';
+import { PasswordRecoveryPage } from '@/modules/auth/components/PasswordRecoveryPage';
+import { PasswordResetPage } from '@/modules/auth/components/PasswordResetPage';
 import { HomePage } from '@/modules/home/components/HomePage';
 import { ToastProvider } from '@/shared/components/ToastProvider';
 import { ProtectedRoute } from '@/lib/auth/ProtectedRoute';
@@ -40,6 +42,20 @@ export function App(): JSX.Element {
     page = (
       <PublicRoute>
         <LoginPage />
+      </PublicRoute>
+    );
+  } else if (currentPath === '/password-recovery') {
+    // Public route - password recovery
+    page = (
+      <PublicRoute>
+        <PasswordRecoveryPage />
+      </PublicRoute>
+    );
+  } else if (currentPath.startsWith('/password-reset')) {
+    // Public route - password reset with token
+    page = (
+      <PublicRoute>
+        <PasswordResetPage />
       </PublicRoute>
     );
   } else if (currentPath === '/home' || currentPath === '/') {
