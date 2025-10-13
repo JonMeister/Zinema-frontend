@@ -135,7 +135,7 @@ export function LoginPage(): JSX.Element {
             )}
 
             <div className={styles['links']}>
-              <a href="#forgot-password" className={styles['link']}>
+              <a href="/password-recovery" className={styles['link']}>
                 Olvidé mi contraseña
               </a>
             </div>
