@@ -3,7 +3,7 @@
  */
 import React from 'react';
 import { HeaderLandingPage } from './HeaderLandingPage';
-import { FooterLandingPage } from './FooterLandingPage';
+import { Footer } from '@/modules/shared/components/Footer';
 import styles from './LandingPage.module.scss';
 
 export function LandingPage(): JSX.Element {
@@ -21,7 +21,7 @@ export function LandingPage(): JSX.Element {
         </section>
       </main>
 
-      <FooterLandingPage />
+      <Footer />
     </div>
   );
 }

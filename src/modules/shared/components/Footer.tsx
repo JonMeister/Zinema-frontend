@@ -1,10 +1,10 @@
 /**
- * Landing footer containing brand, basic sitemap and copyright.
+ * Shared footer containing brand, basic sitemap and copyright.
  */
 import React from 'react';
-import styles from './FooterLandingPage.module.scss';
+import styles from './Footer.module.scss';
 
-export function FooterLandingPage(): JSX.Element {
+export function Footer(): JSX.Element {
   return (
     <footer className={styles['footer']}>
       <div className={styles['footer__container']}>
