@@ -9,6 +9,7 @@ import { Footer } from '@/modules/shared/components/Footer';
 import styles from './LoginPage.module.scss';
 import { apiFetch } from '@/lib/api/client';
 import { useToast } from '@/shared/components/ToastProvider';
+import { useAuth } from '@/lib/auth/useAuth';
 
 export function LoginPage(): JSX.Element {
   /** Local form state for login fields. */
@@ -22,6 +23,8 @@ export function LoginPage(): JSX.Element {
   const [error, setError] = useState<string | null>(null);
   /** Toast API for user feedback. */
   const { showToast } = useToast();
+  /** Authentication hook. */
+  const { login } = useAuth();
 
   /**
    * Updates the corresponding field in {@link formData} when an input changes.
@@ -62,9 +65,9 @@ export function LoginPage(): JSX.Element {
       return;
     }
 
-    // Save token to localStorage
+    // Save token using auth hook
     if (res.data) {
-      localStorage.setItem('authToken', res.data);
+      login(res.data);
     }
 
     showToast('Sesión iniciada con éxito', 'success');
