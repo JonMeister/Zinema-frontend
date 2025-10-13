@@ -6,7 +6,7 @@
  * are handled locally.
  */
 import React, { useState } from 'react';
-import { FooterLandingPage } from '@/modules/landing/components/FooterLandingPage';
+import { Footer } from '@/modules/shared/components/Footer';
 import styles from './SignupPage.module.scss';
 import { apiFetch } from '@/lib/api/client';
 import { useToast } from '@/shared/components/ToastProvider';
@@ -219,7 +219,7 @@ export function SignupPage(): JSX.Element {
             <div className={styles['links']}>
               <p>
                 ¿Ya tienes cuenta?{' '}
-                <a href="#login" className={styles['link']}>
+                <a href="/login" className={styles['link']}>
                   Inicia sesión
                 </a>
               </p>
@@ -228,7 +228,7 @@ export function SignupPage(): JSX.Element {
         </div>
       </main>
 
-      <FooterLandingPage />
+      <Footer />
     </div>
   );
 }

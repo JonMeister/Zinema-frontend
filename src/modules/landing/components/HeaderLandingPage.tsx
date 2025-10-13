@@ -20,7 +20,11 @@ export function HeaderLandingPage(): JSX.Element {
           />
         </div>
         <nav className={styles['header__actions']} aria-label="Account">
-          <button className={`${styles['header__btn']} ${styles['header__btn--ghost']}`} type="button">
+          <button 
+            className={`${styles['header__btn']} ${styles['header__btn--ghost']}`} 
+            type="button"
+            onClick={() => window.location.href = '/login'}
+          >
             Iniciar sesión
           </button>
           <button 
