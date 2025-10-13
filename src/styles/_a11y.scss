@@ -1,0 +1,35 @@
+@use 'sass:color';
+@use './tokens' as *;
+
+:focus-visible {
+  outline: 3px solid $color-accent;
+  outline-offset: 2px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font: inherit;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  cursor: pointer;
+
+  &--primary {
+    background: $color-accent;
+    color: $text-inverse;
+  }
+
+  &--secondary {
+    background: transparent;
+    color: $color-fg;
+    border-color: rgba($color-fg, 0.4);
+  }
+
+  &.is-disabled,
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}

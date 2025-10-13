@@ -1,0 +1,33 @@
+/**
+ * Landing footer containing brand, basic sitemap and copyright.
+ */
+import React from 'react';
+import styles from './FooterLandingPage.module.scss';
+
+export function FooterLandingPage(): JSX.Element {
+  return (
+    <footer className={styles['footer']}>
+      <div className={styles['footer__container']}>
+        <div className={styles['footer__brand']}>
+          <h3>Zinema</h3>
+          <p>Versión 0.0.0</p>
+        </div>
+        
+        <div className={styles['footer__sitemap']}>
+          <h4>Mapa Del Sitio</h4>
+          <ul>
+            <li><a href="#perfil">Perfil</a></li>
+            <li><a href="#hogar">Hogar</a></li>
+            <li><a href="#series">Series</a></li>
+            <li><a href="#peliculas">Películas</a></li>
+            <li><a href="#nosotros">Nosotros</a></li>
+          </ul>
+        </div>
+        
+        <div className={styles['footer__copyright']}>
+          <p>© 2025 Zinema. Todos Los Derechos Reservados.</p>
+        </div>
+      </div>
+    </footer>
+  );
+}
