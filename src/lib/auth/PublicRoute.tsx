@@ -1,6 +1,9 @@
 /**
  * Props interface for PublicRoute component.
  */
+import React, { useEffect } from 'react';
+import { isAuthenticated } from './useAuth';
+
 interface PublicRouteProps {
   children: React.ReactNode;
   redirectTo?: string;
