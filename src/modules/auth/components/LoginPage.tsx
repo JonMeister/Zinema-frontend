@@ -51,7 +51,7 @@ export function LoginPage(): JSX.Element {
       password: formData.password,
     };
 
-    const res = await apiFetch<string>('/api/users/login', {
+    const res = await apiFetch<{ token: string }>('/api/users/login', {
       method: 'POST',
       json: payload,
     });
@@ -66,8 +66,8 @@ export function LoginPage(): JSX.Element {
     }
 
     // Save token using auth hook
-    if (res.data) {
-      login(res.data);
+    if (res.data?.token) {
+      login(res.data.token);
     }
 
     showToast('Sesión iniciada con éxito', 'success');

@@ -12,6 +12,8 @@ import { LoginPage } from '@/modules/auth/components/LoginPage';
 import { PasswordRecoveryPage } from '@/modules/auth/components/PasswordRecoveryPage';
 import { PasswordResetPage } from '@/modules/auth/components/PasswordResetPage';
 import { HomePage } from '@/modules/home/components/HomePage';
+import { ProfilePage } from '@/modules/profile/components/ProfilePage';
+import { EditProfilePage } from '@/modules/profile/components/EditProfilePage';
 import { ToastProvider } from '@/shared/components/ToastProvider';
 import { ProtectedRoute } from '@/lib/auth/ProtectedRoute';
 import { PublicRoute } from '@/lib/auth/PublicRoute';
@@ -65,11 +67,18 @@ export function App(): JSX.Element {
         <HomePage />
       </ProtectedRoute>
     );
-  } else if (currentPath === '/profile') {
-    // Protected route - requires authentication
+  } else if (currentPath === '/profile/edit') {
+    // Protected route - edit profile
     page = (
       <ProtectedRoute>
-        <div>Profile page coming soon...</div>
+        <EditProfilePage />
+      </ProtectedRoute>
+    );
+  } else if (currentPath === '/profile') {
+    // Protected route - view profile
+    page = (
+      <ProtectedRoute>
+        <ProfilePage />
       </ProtectedRoute>
     );
   } else if (currentPath === '/movies' || currentPath === '/series' || currentPath === '/my-list') {
