@@ -1,0 +1,270 @@
+@use '../../../styles/tokens' as *;
+@use '../../../styles/mixins' as *;
+
+.page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: $color-bg;
+}
+
+.main {
+  flex: 1;
+  padding: $space-6 $space-4;
+}
+
+.container {
+  @include container(900px);
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: $space-6;
+}
+
+.title {
+  font-family: 'Merriweather', Georgia, serif;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: $text-primary;
+  margin: 0;
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.75rem 1.5rem;
+  background: transparent;
+  color: $text-ghost;
+  border: 2px solid $border-subtle;
+  border-radius: $radius-md;
+  font-family: 'Merriweather', Georgia, serif;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: $color-button-accent;
+    color: $color-button-accent;
+    transform: translateY(-2px);
+  }
+
+  &:focus-visible {
+    outline: 2px solid $color-accent;
+    outline-offset: 2px;
+  }
+}
+
+.form {
+  background: $overlay-soft;
+  border: 1px solid $border-subtle;
+  border-radius: $radius-lg;
+  padding: $space-6;
+}
+
+.form-section {
+  margin-bottom: $space-6;
+  padding-bottom: $space-6;
+  border-bottom: 1px solid $border-subtle;
+
+  &:last-of-type {
+    border-bottom: none;
+  }
+}
+
+.section-title {
+  font-family: 'Merriweather', Georgia, serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: $text-primary;
+  margin: 0 0 $space-2 0;
+}
+
+.section-help {
+  font-family: 'Merriweather', Georgia, serif;
+  font-size: 0.9rem;
+  color: $text-muted;
+  margin: 0 0 $space-4 0;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $space-4;
+  margin-bottom: $space-4;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: $space-4;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.label {
+  font-family: 'Merriweather', Georgia, serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: $text-primary;
+}
+
+.input {
+  padding: 0.875rem 1rem;
+  background: $color-bg;
+  border: 2px solid $border-subtle;
+  border-radius: $radius-md;
+  color: $text-primary;
+  font-family: 'Merriweather', Georgia, serif;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: lighten($border-subtle, 10%);
+  }
+
+  &:focus {
+    outline: none;
+    border-color: $color-accent;
+    background: lighten($color-bg, 2%);
+  }
+
+  &::placeholder {
+    color: $text-muted;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.help-text {
+  font-family: 'Merriweather', Georgia, serif;
+  font-size: 0.8rem;
+  color: $text-muted;
+  line-height: 1.4;
+}
+
+.error-message {
+  padding: 1rem;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: $radius-md;
+  color: #ef4444;
+  font-family: 'Merriweather', Georgia, serif;
+  font-size: 0.9rem;
+  margin-bottom: $space-4;
+}
+
+.form-actions {
+  display: flex;
+  gap: $space-3;
+  padding-top: $space-4;
+  border-top: 1px solid $border-subtle;
+}
+
+.btn-primary {
+  padding: 0.875rem 2rem;
+  background: $color-button-accent;
+  color: $color-button-text;
+  border: none;
+  border-radius: $radius-md;
+  font-family: 'Merriweather', Georgia, serif;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover:not(:disabled) {
+    background: lighten($color-button-accent, 5%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba($color-button-accent, 0.3);
+  }
+
+  &:focus-visible {
+    outline: 2px solid $color-accent;
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.btn-cancel {
+  padding: 0.875rem 2rem;
+  background: transparent;
+  color: $text-ghost;
+  border: 2px solid $border-subtle;
+  border-radius: $radius-md;
+  font-family: 'Merriweather', Georgia, serif;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+
+  &:hover {
+    border-color: $text-ghost;
+    color: $text-primary;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $color-accent;
+    outline-offset: 2px;
+  }
+}
+
+.loading {
+  text-align: center;
+  padding: $space-8 $space-4;
+  color: $text-primary;
+  font-family: 'Merriweather', Georgia, serif;
+  font-size: 1.1rem;
+}
+
+@media (max-width: $bp-md) {
+  .title {
+    font-size: 2rem;
+  }
+
+  .header {
+    justify-content: center;
+  }
+
+  .form {
+    padding: $space-4;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: $space-3;
+  }
+
+  .form-actions {
+    flex-direction: column;
+
+    .btn-primary,
+    .btn-cancel {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+}
+
