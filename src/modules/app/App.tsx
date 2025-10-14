@@ -35,7 +35,7 @@ export function App(): JSX.Element {
   
   let page = <LandingPage />;
   
-  if (currentPath === '/landing') {
+  if (currentPath === '/landing' || currentPath === '/') {
     // Public route - redirects authenticated users to home
     page = (
       <PublicRoute>
@@ -70,7 +70,7 @@ export function App(): JSX.Element {
         <PasswordResetPage />
       </PublicRoute>
     );
-  } else if (currentPath === '/home' || currentPath === '/') {
+  } else if (currentPath === '/home') {
     // Protected route - requires authentication
     page = (
       <ProtectedRoute>
