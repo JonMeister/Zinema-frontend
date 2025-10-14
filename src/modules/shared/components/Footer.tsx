@@ -27,13 +27,10 @@ export function Footer(): JSX.Element {
         </div>
         
         <div className={styles['footer__sitemap']}>
-          <h4>Mapa Del Sitio</h4>
+          <h4>Enlaces</h4>
           <ul>
-            <li><a href="#perfil">Perfil</a></li>
-            <li><a href="#hogar">Hogar</a></li>
-            <li><a href="#series">Series</a></li>
-            <li><a href="#peliculas">Películas</a></li>
-            <li><a href="#nosotros">Nosotros</a></li>
+            <li><a href="/about">Sobre Nosotros</a></li>
+            <li><a href="/sitemap">Mapa del Sitio</a></li>
           </ul>
         </div>
         
