@@ -1,17 +1,6 @@
 /**
- * Edit profile page.
- * 
- * Allows users to update their personal information and password.
- * Includes HeaderHome and Footer for consistent navigation.
+ * Interface representing user profile data from the API.
  */
-import React, { useState, useEffect } from 'react';
-import { HeaderHome } from '@/modules/home/components/HeaderHome';
-import { Footer } from '@/modules/shared/components/Footer';
-import { apiFetch } from '@/lib/api/client';
-import { getAuthToken } from '@/lib/auth/useAuth';
-import { useToast } from '@/shared/components/ToastProvider';
-import styles from './EditProfilePage.module.scss';
-
 interface UserProfile {
   firstName: string;
   lastName: string;
@@ -19,11 +8,30 @@ interface UserProfile {
   email: string;
 }
 
+/**
+ * Interface extending UserProfile with password fields for form handling.
+ */
 interface FormData extends UserProfile {
   password: string;
   confirmPassword: string;
 }
 
+/**
+ * Edit profile page component.
+ * 
+ * Provides a comprehensive form for users to update their personal information
+ * and change their password. Includes client-side validation, loading states,
+ * and error handling. Redirects to profile page upon successful update.
+ * 
+ * @component
+ * @returns {JSX.Element} The edit profile form with validation and submission handling
+ * 
+ * @example
+ * ```tsx
+ * // Renders edit form with current user data pre-populated
+ * <EditProfilePage />
+ * ```
+ */
 export function EditProfilePage(): JSX.Element {
   const [formData, setFormData] = useState<FormData>({
     firstName: '',

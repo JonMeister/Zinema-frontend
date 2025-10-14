@@ -1,8 +1,18 @@
 /**
- * Login page for existing users.
+ * Login page component for user authentication.
  *
- * Collects email and password, posts to the backend for authentication,
- * and displays toast feedback on success or error.
+ * Provides a form interface for existing users to authenticate with email and password.
+ * Handles form submission, validation, and authentication state management.
+ * Displays toast notifications for success/error feedback and redirects on successful login.
+ * 
+ * @component
+ * @returns {JSX.Element} The login form with email/password fields and submission handling
+ * 
+ * @example
+ * ```tsx
+ * // Renders login form for user authentication
+ * <LoginPage />
+ * ```
  */
 import React, { useState } from 'react';
 import { Footer } from '@/modules/shared/components/Footer';

@@ -1,16 +1,34 @@
-/**
- * Authentication hook for managing user session state.
- *
- * Provides utilities to check authentication status, get/set tokens,
- * and handle login/logout operations.
- */
 import { useState, useEffect } from 'react';
 
+/**
+ * Interface representing the authentication state.
+ */
 export interface AuthState {
   isAuthenticated: boolean;
   token: string | null;
 }
 
+/**
+ * Custom hook for managing user authentication state and operations.
+ *
+ * Provides utilities to check authentication status, manage JWT tokens,
+ * and handle login/logout operations with localStorage persistence.
+ * Automatically initializes authentication state from stored tokens.
+ * 
+ * @returns {AuthState & { login: (token: string) => void; logout: () => void }} 
+ * Authentication state and control functions
+ * 
+ * @example
+ * ```tsx
+ * const { isAuthenticated, login, logout } = useAuth();
+ * 
+ * if (isAuthenticated) {
+ *   // User is logged in
+ * } else {
+ *   // User needs to log in
+ * }
+ * ```
+ */
 export function useAuth(): AuthState & {
   login: (token: string) => void;
   logout: () => void;
@@ -54,7 +72,10 @@ export function useAuth(): AuthState & {
 }
 
 /**
- * Check if a JWT token is expired.
+ * Checks if a JWT token is expired by parsing its payload.
+ * 
+ * @param {string} token - The JWT token to validate
+ * @returns {boolean} True if token is expired or malformed, false if valid
  */
 function isTokenExpired(token: string): boolean {
   try {
@@ -72,7 +93,11 @@ function isTokenExpired(token: string): boolean {
 }
 
 /**
- * Check if user is authenticated by looking for valid token in localStorage.
+ * Checks if the current user is authenticated by validating stored JWT token.
+ * 
+ * Automatically removes expired tokens from localStorage.
+ * 
+ * @returns {boolean} True if user has a valid, non-expired token
  */
 export function isAuthenticated(): boolean {
   const token = localStorage.getItem('authToken');
@@ -88,7 +113,11 @@ export function isAuthenticated(): boolean {
 }
 
 /**
- * Get the current auth token from localStorage.
+ * Retrieves the current authentication token from localStorage.
+ * 
+ * Automatically removes expired tokens and returns null if no valid token exists.
+ * 
+ * @returns {string | null} The valid JWT token or null if not authenticated
  */
 export function getAuthToken(): string | null {
   const token = localStorage.getItem('authToken');

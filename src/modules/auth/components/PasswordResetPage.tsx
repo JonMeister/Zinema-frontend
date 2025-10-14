@@ -1,8 +1,18 @@
 /**
- * Password reset page for setting new password.
+ * Password reset page component.
  *
- * Accessed via email link, allows user to set a new password directly.
- * Collects new password and confirmation.
+ * Accessed via secure email link with reset token. Allows users to set a new password
+ * after validating the token from URL parameters. Includes password confirmation,
+ * client-side validation, and redirects to login upon successful reset.
+ * 
+ * @component
+ * @returns {JSX.Element} The password reset form with token validation and submission handling
+ * 
+ * @example
+ * ```tsx
+ * // Renders password reset form with token from URL
+ * <PasswordResetPage />
+ * ```
  */
 import React, { useState, useEffect } from 'react';
 import { Footer } from '@/modules/shared/components/Footer';

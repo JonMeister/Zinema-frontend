@@ -225,12 +225,144 @@
   }
 
   .card {
-    padding: var(--space-4);
+    padding: $space-4;
   }
 
   .avatar svg {
     width: 80px;
     height: 80px;
+  }
+}
+
+// Modal de confirmación
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: $space-4;
+}
+
+.modal {
+  background: $overlay-strong;
+  backdrop-filter: blur(10px);
+  border: 1px solid $border-subtle;
+  border-radius: $radius-lg;
+  padding: $space-6;
+  max-width: 500px;
+  width: 100%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.modal-title {
+  font-family: 'Merriweather', Georgia, serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #ef4444;
+  margin: 0 0 $space-4 0;
+  text-align: center;
+}
+
+.modal-text {
+  font-family: 'Merriweather', Georgia, serif;
+  font-size: 1rem;
+  color: $text-primary;
+  margin: 0 0 $space-3 0;
+  line-height: 1.6;
+}
+
+.modal-instruction {
+  font-family: 'Merriweather', Georgia, serif;
+  font-size: 0.9rem;
+  color: $text-muted;
+  margin: 0 0 $space-4 0;
+  line-height: 1.5;
+}
+
+.modal-input {
+  width: 100%;
+  padding: $space-3;
+  background: $color-bg;
+  border: 2px solid $border-subtle;
+  border-radius: $radius-md;
+  color: $text-primary;
+  font-family: 'Merriweather', Georgia, serif;
+  font-size: 1rem;
+  margin-bottom: $space-5;
+  transition: all 0.2s ease;
+
+  &:focus {
+    outline: none;
+    border-color: #ef4444;
+    background: lighten($color-bg, 2%);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  &::placeholder {
+    color: $text-muted;
+  }
+}
+
+.modal-actions {
+  display: flex;
+  gap: $space-3;
+  justify-content: flex-end;
+}
+
+.btn-cancel {
+  padding: $space-3 $space-4;
+  background: transparent;
+  color: $text-ghost;
+  border: 2px solid $border-subtle;
+  border-radius: $radius-md;
+  font-family: 'Merriweather', Georgia, serif;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover:not(:disabled) {
+    border-color: $text-ghost;
+    color: $text-primary;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.btn-confirm-delete {
+  padding: $space-3 $space-4;
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: $radius-md;
+  font-family: 'Merriweather', Georgia, serif;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover:not(:disabled) {
+    background: #dc2626;
+    transform: translateY(-1px);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
   }
 }
 
