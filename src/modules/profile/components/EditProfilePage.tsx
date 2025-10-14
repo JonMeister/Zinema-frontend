@@ -32,6 +32,14 @@ interface FormData extends UserProfile {
  * <EditProfilePage />
  * ```
  */
+import React, { useEffect, useState } from 'react';
+import styles from './EditProfilePage.module.scss';
+import { HeaderHome } from '../../home/components/HeaderHome';
+import { Footer } from '../../shared/components/Footer';
+import { apiFetch } from '../../../lib/api/client';
+import { getAuthToken } from '../../../lib/auth/useAuth';
+import { useToast } from '../../../shared/components/ToastProvider';
+
 export function EditProfilePage(): JSX.Element {
   const [formData, setFormData] = useState<FormData>({
     firstName: '',

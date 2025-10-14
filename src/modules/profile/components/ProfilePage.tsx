@@ -26,6 +26,14 @@ interface UserProfile {
  * <ProfilePage />
  * ```
  */
+import React, { useEffect, useState } from 'react';
+import styles from './ProfilePage.module.scss';
+import { HeaderHome } from '../../home/components/HeaderHome';
+import { Footer } from '../../shared/components/Footer';
+import { apiFetch } from '../../../lib/api/client';
+import { getAuthToken } from '../../../lib/auth/useAuth';
+import { useToast } from '../../../shared/components/ToastProvider';
+
 export function ProfilePage(): JSX.Element {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
