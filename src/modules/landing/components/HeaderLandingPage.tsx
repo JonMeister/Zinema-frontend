@@ -1,8 +1,18 @@
 /**
- * Top-level landing header with brand logo and primary account actions.
+ * Landing page header component.
  *
- * Contains the brand image at the left and two action buttons on the right.
- * The “Sign up” button navigates to `/signup` using a simple location change.
+ * Displays the Zinema brand logo and primary navigation actions for unauthenticated users.
+ * Contains login and registration buttons with responsive design and accessibility features.
+ * Used on the public landing page to provide entry points to authentication flows.
+ * 
+ * @component
+ * @returns {JSX.Element} The landing page header with logo and action buttons
+ * 
+ * @example
+ * ```tsx
+ * // Renders header with logo and auth buttons
+ * <HeaderLandingPage />
+ * ```
  */
 import React from 'react';
 import styles from './HeaderLandingPage.module.scss';

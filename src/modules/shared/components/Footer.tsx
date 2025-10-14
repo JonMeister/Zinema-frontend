@@ -1,5 +1,18 @@
 /**
- * Shared footer containing brand, basic sitemap and copyright.
+ * Shared footer component used across all pages.
+ *
+ * Displays the Zinema brand information, site navigation links, and copyright notice.
+ * Provides consistent footer content and styling throughout the application.
+ * Includes responsive design and accessibility features.
+ * 
+ * @component
+ * @returns {JSX.Element} The footer with brand info, sitemap, and copyright
+ * 
+ * @example
+ * ```tsx
+ * // Renders footer on all pages
+ * <Footer />
+ * ```
  */
 import React from 'react';
 import styles from './Footer.module.scss';

@@ -1,7 +1,18 @@
 /**
- * Header for authenticated home page.
+ * Authenticated user header component.
  *
- * Displays logo, navigation links, and user account controls with dropdown.
+ * Displays the Zinema logo, navigation links, and user account controls for authenticated users.
+ * Includes a dropdown menu with profile and logout options, with click-outside handling
+ * for proper UX. Provides navigation to different sections of the application.
+ * 
+ * @component
+ * @returns {JSX.Element} The authenticated user header with navigation and user controls
+ * 
+ * @example
+ * ```tsx
+ * // Renders header with navigation and user dropdown
+ * <HeaderHome />
+ * ```
  */
 import React, { useState, useRef, useEffect } from 'react';
 import styles from './HeaderHome.module.scss';

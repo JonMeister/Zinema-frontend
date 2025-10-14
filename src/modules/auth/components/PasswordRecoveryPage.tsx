@@ -1,8 +1,18 @@
 /**
- * Password recovery page for requesting reset link via email.
+ * Password recovery request page component.
  *
- * Collects user email and sends password reset link request to backend.
- * The user will receive an email with a link to the reset page.
+ * Provides a form interface for users to request a password reset link via email.
+ * Sends the request to the backend which generates a secure token and sends
+ * an email with reset instructions. Includes form validation and user feedback.
+ * 
+ * @component
+ * @returns {JSX.Element} The password recovery form with email input and submission handling
+ * 
+ * @example
+ * ```tsx
+ * // Renders password recovery form
+ * <PasswordRecoveryPage />
+ * ```
  */
 import React, { useState } from 'react';
 import { Footer } from '@/modules/shared/components/Footer';

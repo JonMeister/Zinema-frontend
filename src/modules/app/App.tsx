@@ -1,9 +1,19 @@
 /**
- * Minimal app entry component with rudimentary client-side routing.
+ * Main application component with client-side routing.
  *
- * It selects between the landing page, signup, login, and home pages based on
- * `window.location.pathname`. For a production app, replace with a real router.
- * Protected routes require authentication.
+ * Implements a simple routing system based on `window.location.pathname`.
+ * Handles both public routes (landing, auth) and protected routes (home, profile).
+ * Wraps all routes with ToastProvider for global notifications.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered page component based on current route
+ *
+ * @example
+ * ```tsx
+ * // Renders LandingPage for unauthenticated users
+ * // Renders HomePage for authenticated users at /home
+ * <App />
+ * ```
  */
 import React from 'react';
 import { LandingPage } from '@/modules/landing/components/LandingPage';
