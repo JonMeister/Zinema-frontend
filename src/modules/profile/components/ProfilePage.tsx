@@ -1,17 +1,6 @@
 /**
- * User profile page.
- * 
- * Displays user information with options to edit or delete account.
- * Includes HeaderHome and Footer for consistent navigation.
+ * Interface representing user profile data from the API.
  */
-import React, { useState, useEffect } from 'react';
-import { HeaderHome } from '@/modules/home/components/HeaderHome';
-import { Footer } from '@/modules/shared/components/Footer';
-import { apiFetch } from '@/lib/api/client';
-import { getAuthToken } from '@/lib/auth/useAuth';
-import { useToast } from '@/shared/components/ToastProvider';
-import styles from './ProfilePage.module.scss';
-
 interface UserProfile {
   firstName: string;
   lastName: string;
@@ -21,10 +10,29 @@ interface UserProfile {
   updatedAt: string;
 }
 
+/**
+ * User profile page component.
+ * 
+ * Displays comprehensive user information including personal details and account metadata.
+ * Provides functionality to edit profile and delete account with confirmation modal.
+ * Includes HeaderHome and Footer for consistent navigation experience.
+ * 
+ * @component
+ * @returns {JSX.Element} The profile page with user data and action buttons
+ * 
+ * @example
+ * ```tsx
+ * // Renders user profile with edit and delete options
+ * <ProfilePage />
+ * ```
+ */
 export function ProfilePage(): JSX.Element {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleteConfirmation, setDeleteConfirmation] = useState('');
+  const [deleting, setDeleting] = useState(false);
   const { showToast } = useToast();
 
   useEffect(() => {
@@ -60,10 +68,18 @@ export function ProfilePage(): JSX.Element {
     }
   };
 
-  const handleDeleteAccount = async () => {
-    if (!confirm('¿Estás seguro de que deseas eliminar tu cuenta? Esta acción no se puede deshacer.')) {
+  const handleDeleteAccount = () => {
+    setShowDeleteModal(true);
+    setDeleteConfirmation('');
+  };
+
+  const confirmDeleteAccount = async () => {
+    if (deleteConfirmation.toLowerCase() !== 'eliminar') {
+      showToast('Debes escribir "ELIMINAR" para confirmar', 'error');
       return;
     }
+
+    setDeleting(true);
 
     try {
       const token = getAuthToken();
@@ -84,10 +100,20 @@ export function ProfilePage(): JSX.Element {
         }, 1000);
       } else {
         showToast(response.error?.message || 'Error al eliminar la cuenta', 'error');
+        setDeleting(false);
+        setShowDeleteModal(false);
       }
     } catch (err) {
       showToast('Error de conexión', 'error');
+      setDeleting(false);
+      setShowDeleteModal(false);
     }
+  };
+
+  const cancelDeleteAccount = () => {
+    setShowDeleteModal(false);
+    setDeleteConfirmation('');
+    setDeleting(false);
   };
 
   const formatDate = (dateString: string) => {
@@ -199,6 +225,45 @@ export function ProfilePage(): JSX.Element {
       </main>
 
       <Footer />
+
+      {/* Modal de confirmación para eliminar cuenta */}
+      {showDeleteModal && (
+        <div className={styles['modal-overlay']}>
+          <div className={styles['modal']}>
+            <h3 className={styles['modal-title']}>Eliminar Cuenta</h3>
+            <p className={styles['modal-text']}>
+              Esta acción es irreversible. Todos tus datos serán eliminados permanentemente.
+            </p>
+            <p className={styles['modal-instruction']}>
+              Para confirmar, escribe <strong>ELIMINAR</strong> en el campo de abajo:
+            </p>
+            <input
+              type="text"
+              value={deleteConfirmation}
+              onChange={(e) => setDeleteConfirmation(e.target.value)}
+              placeholder="Escribe ELIMINAR aquí"
+              className={styles['modal-input']}
+              disabled={deleting}
+            />
+            <div className={styles['modal-actions']}>
+              <button
+                onClick={cancelDeleteAccount}
+                className={styles['btn-cancel']}
+                disabled={deleting}
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={confirmDeleteAccount}
+                className={styles['btn-confirm-delete']}
+                disabled={deleting || deleteConfirmation.toLowerCase() !== 'eliminar'}
+              >
+                {deleting ? 'Eliminando...' : 'Eliminar Cuenta'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

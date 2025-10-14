@@ -1,9 +1,19 @@
 /**
- * Signup page that collects user data and sends it to the backend.
+ * User registration page component.
  *
- * The form uses controlled inputs and posts to `/api/users/register` using the
- * shared {@link apiFetch} helper. Basic submission state and error display
- * are handled locally.
+ * Provides a comprehensive form for new users to create an account.
+ * Collects personal information (name, age, email) and password with confirmation.
+ * Includes client-side validation, submission state management, and error handling.
+ * Redirects to login page upon successful registration.
+ * 
+ * @component
+ * @returns {JSX.Element} The registration form with validation and submission handling
+ * 
+ * @example
+ * ```tsx
+ * // Renders registration form for new users
+ * <SignupPage />
+ * ```
  */
 import React, { useState } from 'react';
 import { Footer } from '@/modules/shared/components/Footer';
