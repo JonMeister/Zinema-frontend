@@ -194,7 +194,7 @@ export function EditProfilePage(): JSX.Element {
     return (
       <div className={styles['page']}>
         <HeaderHome />
-        <main className={styles['main']} role="main" aria-busy="true" aria-live="polite">
+        <main id="main-content" className={styles['main']} role="main" aria-busy="true" aria-live="polite">
           <div className={styles['container']}>
             <div className={styles['loading']} role="status">
               <span>Cargando perfil...</span>
@@ -210,7 +210,7 @@ export function EditProfilePage(): JSX.Element {
     <div className={styles['page']}>
       <HeaderHome />
 
-      <main className={styles['main']} role="main" aria-labelledby="edit-profile-title">
+      <main id="main-content" className={styles['main']} role="main" aria-labelledby="edit-profile-title">
         <div className={styles['container']}>
           <div className={styles['header']}>
             <h1 id="edit-profile-title" className={styles['title']}>Editar Perfil</h1>

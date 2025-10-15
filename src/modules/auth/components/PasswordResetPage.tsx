@@ -134,7 +134,7 @@ export function PasswordResetPage(): JSX.Element {
   if (validatingToken) {
     return (
       <div className={styles['page']}>
-        <main className={styles['main']} role="main" aria-busy="true" aria-live="polite">
+        <main id="main-content" className={styles['main']} role="main" aria-busy="true" aria-live="polite">
           <div className={styles['container']}>
             <div className={styles['header']} role="status">
               <h1 className={styles['title']}>Validando enlace...</h1>
@@ -153,7 +153,7 @@ export function PasswordResetPage(): JSX.Element {
   if (!resetToken) {
     return (
       <div className={styles['page']}>
-        <main className={styles['main']} role="main" aria-labelledby="error-title">
+        <main id="main-content" className={styles['main']} role="main" aria-labelledby="error-title">
           <div className={styles['container']}>
             <div className={styles['header']} role="alert">
               <h1 id="error-title" className={styles['title']}>Enlace Inválido</h1>
