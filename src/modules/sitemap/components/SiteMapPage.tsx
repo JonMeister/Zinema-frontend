@@ -143,9 +143,10 @@ export function SiteMapPage(): JSX.Element {
                     key={linkIndex}
                     href={link.path}
                     className={styles['link-card']}
+                    aria-label={`Ir a ${link.title}: ${link.description}`}
                   >
-                    <div className={styles['link-icon']}>
-                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <div className={styles['link-icon']} role="img" aria-label="Icono de enlace">
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
                         <path d="M9 18l6-6-6-6" />
                       </svg>
                     </div>

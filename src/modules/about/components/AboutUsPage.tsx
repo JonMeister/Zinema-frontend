@@ -22,10 +22,10 @@ interface TeamMember {
 }
 
 const teamMembers: TeamMember[] = [
-  { name: 'Jonathan Aristizabal', role: 'Full Stack Developer' },
-  { name: 'Jhorman Gomez', role: 'Full Stack Developer' },
+  { name: 'Jonathan Aristizabal', role: 'Product Owner' },
+  { name: 'Jhorman Gomez', role: 'Backend Developer' },
   { name: 'Jose Martinez', role: 'Full Stack Developer' },
-  { name: 'Isabella Ruiz', role: 'Full Stack Developer' },
+  { name: 'Isabella Ruiz', role: 'VCS & Project Manager' },
 ];
 
 export function AboutUsPage(): JSX.Element {
@@ -70,8 +70,8 @@ export function AboutUsPage(): JSX.Element {
             <div className={styles['team-grid']}>
               {teamMembers.map((member, index) => (
                 <div key={index} className={styles['team-card']}>
-                  <div className={styles['avatar']}>
-                    <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                  <div className={styles['avatar']} role="img" aria-label={`Avatar de ${member.name}`}>
+                    <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
                       <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
                       <circle cx="12" cy="7" r="4" />
                     </svg>
@@ -88,8 +88,8 @@ export function AboutUsPage(): JSX.Element {
             <h2 className={styles['section-title']}>Nuestros Valores</h2>
             <div className={styles['values-grid']}>
               <div className={styles['value-card']}>
-                <div className={styles['value-icon']}>
-                  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <div className={styles['value-icon']} role="img" aria-label="Icono de innovación">
+                  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
                     <path d="M12 2L2 7l10 5 10-5-10-5z" />
                     <path d="M2 17l10 5 10-5M2 12l10 5 10-5" />
                   </svg>
@@ -101,8 +101,8 @@ export function AboutUsPage(): JSX.Element {
               </div>
 
               <div className={styles['value-card']}>
-                <div className={styles['value-icon']}>
-                  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <div className={styles['value-icon']} role="img" aria-label="Icono de colaboración">
+                  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
                     <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
                     <circle cx="9" cy="7" r="4" />
                     <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
@@ -115,8 +115,8 @@ export function AboutUsPage(): JSX.Element {
               </div>
 
               <div className={styles['value-card']}>
-                <div className={styles['value-icon']}>
-                  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <div className={styles['value-icon']} role="img" aria-label="Icono de calidad">
+                  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
                     <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
                     <polyline points="22 4 12 14.01 9 11.01" />
                   </svg>
@@ -128,8 +128,8 @@ export function AboutUsPage(): JSX.Element {
               </div>
 
               <div className={styles['value-card']}>
-                <div className={styles['value-icon']}>
-                  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <div className={styles['value-icon']} role="img" aria-label="Icono de seguridad">
+                  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
                     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                   </svg>
                 </div>

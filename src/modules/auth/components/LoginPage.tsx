@@ -92,7 +92,16 @@ export function LoginPage(): JSX.Element {
       <main className={styles['main']}>
         <div className={styles['container']}>
           <div className={styles['header']}>
-            <h1 className={styles['title']}>Zinema</h1>
+            <div className={styles['title']} aria-label="zinemalogo">
+              <a href="/landing" aria-label="Ir al inicio">
+                <img
+                  src="/images/logos/zinemalogo.png"
+                  alt="zinemalogo"
+                  width="200"
+                  height="50"
+                />
+              </a>
+            </div>
             <p className={styles['subtitle']}>
               Inicia sesión para continuar
             </p>

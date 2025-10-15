@@ -1,3 +1,5 @@
+@use "sass:color";
+
 // Core palette
 // Background of the app (body)
 $color-bg: #0b0b0c;
@@ -84,7 +86,7 @@ $font-weight-bold: 700;
 $color-surface: rgba(255, 255, 255, 0.05);
 $color-surface-hover: rgba(255, 255, 255, 0.08);
 $color-primary: $color-accent;
-$color-primary-dark: darken($color-accent, 10%);
+$color-primary-dark: color.scale($color-accent, $lightness: -10%);
 $color-primary-light: rgba($color-accent, 0.15);
 $color-border: $border-subtle;
 
