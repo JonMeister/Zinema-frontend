@@ -19,7 +19,12 @@ import styles from './Footer.module.scss';
 
 export function Footer(): JSX.Element {
   return (
-    <footer className={styles['footer']} role="contentinfo" aria-label="Pie de página">
+    <footer className={styles['footer']} role="contentinfo" aria-labelledby="footer-title">
+      {/* Visually hidden heading for landmark identification */}
+      <h2 id="footer-title" className="visually-hidden">
+        Información del sitio
+      </h2>
+      
       <div className={styles['footer__container']}>
         <div className={styles['footer__brand']} role="group" aria-label="Información de marca">
           <h3>Zinema</h3>
@@ -34,7 +39,7 @@ export function Footer(): JSX.Element {
           </ul>
         </nav>
         
-        <div className={styles['footer__copyright']} role="contentinfo">
+        <div className={styles['footer__copyright']}>
           <p>© 2025 Zinema. Todos Los Derechos Reservados.</p>
         </div>
       </div>
