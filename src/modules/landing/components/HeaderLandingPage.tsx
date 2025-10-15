@@ -20,6 +20,11 @@ import styles from './HeaderLandingPage.module.scss';
 export function HeaderLandingPage(): JSX.Element {
   return (
     <header className={styles['header']} role="banner">
+      {/* Skip to main content link for accessibility */}
+      <a href="#main-content" className={styles['skip-link']}>
+        Saltar al contenido principal
+      </a>
+      
       <div className={styles['header__bar']}>
         <div className={styles['header__logo']}>
           <a href="/landing" aria-label="Zinema - Ir a página principal">
