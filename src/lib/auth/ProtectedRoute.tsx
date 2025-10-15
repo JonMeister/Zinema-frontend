@@ -1,6 +1,9 @@
 /**
  * Props interface for ProtectedRoute component.
  */
+import React from 'react';
+import { isAuthenticated } from './useAuth';
+
 interface ProtectedRouteProps {
   children: React.ReactNode;
   redirectTo?: string;

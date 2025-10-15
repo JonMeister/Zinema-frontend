@@ -24,6 +24,8 @@ import { PasswordResetPage } from '@/modules/auth/components/PasswordResetPage';
 import { HomePage } from '@/modules/home/components/HomePage';
 import { ProfilePage } from '@/modules/profile/components/ProfilePage';
 import { EditProfilePage } from '@/modules/profile/components/EditProfilePage';
+import { AboutUsPage } from '@/modules/about/components/AboutUsPage';
+import { SiteMapPage } from '@/modules/sitemap/components/SiteMapPage';
 import { ToastProvider } from '@/shared/components/ToastProvider';
 import { ProtectedRoute } from '@/lib/auth/ProtectedRoute';
 import { PublicRoute } from '@/lib/auth/PublicRoute';
@@ -35,7 +37,7 @@ export function App(): JSX.Element {
   
   let page = <LandingPage />;
   
-  if (currentPath === '/landing') {
+  if (currentPath === '/landing' || currentPath === '/') {
     // Public route - redirects authenticated users to home
     page = (
       <PublicRoute>
@@ -70,7 +72,7 @@ export function App(): JSX.Element {
         <PasswordResetPage />
       </PublicRoute>
     );
-  } else if (currentPath === '/home' || currentPath === '/') {
+  } else if (currentPath === '/home') {
     // Protected route - requires authentication
     page = (
       <ProtectedRoute>
@@ -98,6 +100,12 @@ export function App(): JSX.Element {
         <div>{currentPath} page coming soon...</div>
       </ProtectedRoute>
     );
+  } else if (currentPath === '/about') {
+    // Public route - about us page
+    page = <AboutUsPage />;
+  } else if (currentPath === '/sitemap') {
+    // Public route - site map page
+    page = <SiteMapPage />;
   }
   
   return (

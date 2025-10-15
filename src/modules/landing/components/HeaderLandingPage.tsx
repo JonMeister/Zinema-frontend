@@ -21,19 +21,22 @@ export function HeaderLandingPage(): JSX.Element {
   return (
     <header className={styles['header']} role="banner">
       <div className={styles['header__bar']}>
-        <div className={styles['header__logo']} aria-label="Zinema">
-          <img 
-            src="/images/logos/zinemalogo.png" 
-            alt="Zinema" 
-            width="120" 
-            height="40"
-          />
+        <div className={styles['header__logo']}>
+          <a href="/landing" aria-label="Zinema - Ir a página principal">
+            <img 
+              src="/images/logos/zinemalogo.png" 
+              alt="Logo de Zinema" 
+              width="120" 
+              height="40"
+            />
+          </a>
         </div>
-        <nav className={styles['header__actions']} aria-label="Account">
+        <nav className={styles['header__actions']} aria-label="Acciones de cuenta">
           <button 
             className={`${styles['header__btn']} ${styles['header__btn--ghost']}`} 
             type="button"
             onClick={() => window.location.href = '/login'}
+            aria-label="Ir a página de inicio de sesión"
           >
             Iniciar sesión
           </button>
@@ -41,6 +44,7 @@ export function HeaderLandingPage(): JSX.Element {
             className={`${styles['header__btn']} ${styles['header__btn--filled']}`}
             type="button"
             onClick={() => window.location.href = '/signup'}
+            aria-label="Ir a página de registro"
           >
             Registrarse
           </button>
