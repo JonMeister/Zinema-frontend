@@ -54,6 +54,11 @@ export function EditProfilePage(): JSX.Element {
   const [error, setError] = useState<string | null>(null);
   const { showToast } = useToast();
 
+  // Set page title for screen readers
+  useEffect(() => {
+    document.title = 'Editar Perfil - Zinema';
+  }, []);
+
   useEffect(() => {
     fetchProfile();
   }, []);
@@ -168,10 +173,10 @@ export function EditProfilePage(): JSX.Element {
       });
 
       if (response.ok) {
-        showToast('Perfil actualizado exitosamente', 'success');
+        showToast('Perfil actualizado exitosamente', 'success', 500);
         setTimeout(() => {
           window.location.href = '/profile';
-        }, 1000);
+        }, 1500);
       } else {
         const errorMessage = response.error?.message || 'Error al actualizar el perfil';
         setError(errorMessage);
@@ -189,9 +194,11 @@ export function EditProfilePage(): JSX.Element {
     return (
       <div className={styles['page']}>
         <HeaderHome />
-        <main className={styles['main']}>
+        <main className={styles['main']} role="main" aria-busy="true" aria-live="polite">
           <div className={styles['container']}>
-            <div className={styles['loading']}>Cargando perfil...</div>
+            <div className={styles['loading']} role="status">
+              <span>Cargando perfil...</span>
+            </div>
           </div>
         </main>
         <Footer />
@@ -203,20 +210,20 @@ export function EditProfilePage(): JSX.Element {
     <div className={styles['page']}>
       <HeaderHome />
 
-      <main className={styles['main']}>
+      <main className={styles['main']} role="main" aria-labelledby="edit-profile-title">
         <div className={styles['container']}>
           <div className={styles['header']}>
-            <h1 className={styles['title']}>Editar Perfil</h1>
+            <h1 id="edit-profile-title" className={styles['title']}>Editar Perfil</h1>
           </div>
 
-          <form className={styles['form']} onSubmit={handleSubmit} noValidate>
-            <div className={styles['form-section']}>
-              <h2 className={styles['section-title']}>Información Personal</h2>
+          <form className={styles['form']} onSubmit={handleSubmit} noValidate aria-labelledby="edit-profile-title">
+            <section className={styles['form-section']} aria-labelledby="personal-info-title">
+              <h2 id="personal-info-title" className={styles['section-title']}>Información Personal</h2>
 
               <div className={styles['form-row']}>
                 <div className={styles['form-group']}>
                   <label htmlFor="firstName" className={styles['label']}>
-                    Nombre *
+                    Nombre <span aria-label="requerido">*</span>
                   </label>
                   <input
                     type="text"
@@ -226,12 +233,16 @@ export function EditProfilePage(): JSX.Element {
                     onChange={handleInputChange}
                     className={styles['input']}
                     required
+                    aria-required="true"
+                    aria-invalid={error ? 'true' : 'false'}
+                    aria-describedby="firstName-help"
                   />
+                  <span id="firstName-help" className="visually-hidden">Campo requerido para tu nombre</span>
                 </div>
 
                 <div className={styles['form-group']}>
                   <label htmlFor="lastName" className={styles['label']}>
-                    Apellido *
+                    Apellido <span aria-label="requerido">*</span>
                   </label>
                   <input
                     type="text"
@@ -241,14 +252,18 @@ export function EditProfilePage(): JSX.Element {
                     onChange={handleInputChange}
                     className={styles['input']}
                     required
+                    aria-required="true"
+                    aria-invalid={error ? 'true' : 'false'}
+                    aria-describedby="lastName-help"
                   />
+                  <span id="lastName-help" className="visually-hidden">Campo requerido para tu apellido</span>
                 </div>
               </div>
 
               <div className={styles['form-row']}>
                 <div className={styles['form-group']}>
                   <label htmlFor="email" className={styles['label']}>
-                    Correo Electrónico *
+                    Correo Electrónico <span aria-label="requerido">*</span>
                   </label>
                   <input
                     type="email"
@@ -258,12 +273,16 @@ export function EditProfilePage(): JSX.Element {
                     onChange={handleInputChange}
                     className={styles['input']}
                     required
+                    aria-required="true"
+                    aria-invalid={error ? 'true' : 'false'}
+                    aria-describedby="email-help"
                   />
+                  <span id="email-help" className="visually-hidden">Campo requerido para tu correo electrónico</span>
                 </div>
 
                 <div className={styles['form-group']}>
                   <label htmlFor="age" className={styles['label']}>
-                    Edad *
+                    Edad <span aria-label="requerido">*</span>
                   </label>
                   <input
                     type="number"
@@ -275,14 +294,18 @@ export function EditProfilePage(): JSX.Element {
                     min="13"
                     max="120"
                     required
+                    aria-required="true"
+                    aria-invalid={error ? 'true' : 'false'}
+                    aria-describedby="age-help"
                   />
+                  <span id="age-help" className="visually-hidden">Campo requerido, edad mínima 13 años</span>
                 </div>
               </div>
-            </div>
+            </section>
 
-            <div className={styles['form-section']}>
-              <h2 className={styles['section-title']}>Cambiar Contraseña</h2>
-              <p className={styles['section-help']}>
+            <section className={styles['form-section']} aria-labelledby="password-section-title">
+              <h2 id="password-section-title" className={styles['section-title']}>Cambiar Contraseña</h2>
+              <p className={styles['section-help']} role="note">
                 Deja estos campos vacíos si no deseas cambiar tu contraseña
               </p>
 
@@ -298,9 +321,10 @@ export function EditProfilePage(): JSX.Element {
                   onChange={handleInputChange}
                   className={styles['input']}
                   minLength={8}
+                  aria-describedby="password-help"
                 />
-                <span className={styles['help-text']}>
-                  Mínimo 8 caracteres, incluye mayúsculas, minúsculas, números y caracteres especiales
+                <span id="password-help" className={styles['help-text']} role="note">
+                  Mínimo 8 caracteres, se recomienda incluir mayúsculas, minúsculas, números y caracteres especiales
                 </span>
               </div>
 
@@ -316,25 +340,31 @@ export function EditProfilePage(): JSX.Element {
                   onChange={handleInputChange}
                   className={styles['input']}
                   minLength={8}
+                  aria-describedby="confirmPassword-help"
                 />
+                <span id="confirmPassword-help" className="visually-hidden">
+                  Repite la nueva contraseña para confirmar
+                </span>
               </div>
-            </div>
+            </section>
 
             {error && (
-              <div className={styles['error-message']} role="alert">
-                {error}
+              <div className={styles['error-message']} role="alert" aria-live="assertive">
+                <strong>Error:</strong> {error}
               </div>
             )}
 
-            <div className={styles['form-actions']}>
+            <div className={styles['form-actions']} role="group" aria-label="Acciones del formulario">
               <button
                 type="submit"
                 className={styles['btn-primary']}
                 disabled={submitting}
+                aria-busy={submitting}
+                aria-label={submitting ? 'Guardando cambios, por favor espera' : 'Guardar cambios del perfil'}
               >
                 {submitting ? 'Guardando...' : 'Guardar Cambios'}
               </button>
-              <a href="/profile" className={styles['btn-cancel']}>
+              <a href="/profile" className={styles['btn-cancel']} aria-label="Cancelar edición y volver al perfil">
                 Cancelar
               </a>
             </div>

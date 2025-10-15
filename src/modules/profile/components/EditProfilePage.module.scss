@@ -1,5 +1,6 @@
 @use '../../../styles/tokens' as *;
 @use '../../../styles/mixins' as *;
+@use "sass:color";
 
 .page {
   display: flex;
@@ -87,7 +88,7 @@
 
 .section-help {
   font-family: 'Merriweather', Georgia, serif;
-  font-size: 0.9rem;
+  font-size: 1rem;
   color: $text-muted;
   margin: 0 0 $space-4 0;
 }
@@ -116,7 +117,7 @@
 
 .label {
   font-family: 'Merriweather', Georgia, serif;
-  font-size: 0.9rem;
+  font-size: 1rem;
   font-weight: 600;
   color: $text-primary;
 }
@@ -132,13 +133,13 @@
   transition: all 0.2s ease;
 
   &:hover {
-    border-color: lighten($border-subtle, 10%);
+    border-color: color.scale($border-subtle, $lightness: 10%);
   }
 
   &:focus {
     outline: none;
     border-color: $color-accent;
-    background: lighten($color-bg, 2%);
+    background: color.scale($color-bg, $lightness: 2%);
   }
 
   &::placeholder {
@@ -153,7 +154,7 @@
 
 .help-text {
   font-family: 'Merriweather', Georgia, serif;
-  font-size: 0.8rem;
+  font-size: 1rem;
   color: $text-muted;
   line-height: 1.4;
 }
@@ -165,7 +166,7 @@
   border-radius: $radius-md;
   color: #ef4444;
   font-family: 'Merriweather', Georgia, serif;
-  font-size: 0.9rem;
+  font-size: 1rem;
   margin-bottom: $space-4;
 }
 
@@ -189,7 +190,7 @@
   transition: all 0.2s ease;
 
   &:hover:not(:disabled) {
-    background: lighten($color-button-accent, 5%);
+    background: color.scale($color-button-accent, $lightness: 5%);
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba($color-button-accent, 0.3);
   }

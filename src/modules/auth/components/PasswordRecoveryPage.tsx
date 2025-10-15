@@ -30,6 +30,11 @@ export function PasswordRecoveryPage(): JSX.Element {
   /** Toast API for user feedback. */
   const { showToast } = useToast();
 
+  // Set page title for screen readers
+  React.useEffect(() => {
+    document.title = 'Recuperar Contraseña - Zinema';
+  }, []);
+
   /**
    * Handles form submission: sends reset link request to backend.
    */
@@ -67,19 +72,19 @@ export function PasswordRecoveryPage(): JSX.Element {
 
   return (
     <div className={styles['page']}>
-      <main className={styles['main']}>
+      <main id="main-content" className={styles['main']} role="main" aria-labelledby="recovery-title">
         <div className={styles['container']}>
           <div className={styles['header']}>
-            <h1 className={styles['title']}>Recuperar Contraseña</h1>
+            <h1 id="recovery-title" className={styles['title']}>Recuperar Contraseña</h1>
             <p className={styles['subtitle']}>
               Ingresa tu correo y te enviaremos un enlace para recuperar tu contraseña
             </p>
           </div>
 
-          <form className={styles['form']} onSubmit={handleSubmit} noValidate>
+          <form className={styles['form']} onSubmit={handleSubmit} noValidate aria-labelledby="recovery-title">
             <div className={styles['formGroup']}>
               <label htmlFor="email" className={styles['formLabel']}>
-                Correo electrónico
+                Correo electrónico <span aria-label="requerido">*</span>
               </label>
               <input
                 type="email"
@@ -89,27 +94,36 @@ export function PasswordRecoveryPage(): JSX.Element {
                 onChange={(e) => setEmail(e.target.value)}
                 className={styles['formInput']}
                 required
+                aria-required="true"
                 aria-describedby="email-help"
+                aria-invalid={error ? 'true' : 'false'}
+                placeholder="ejemplo@correo.com"
               />
-              <span id="email-help" className={styles['formHelp']}>
-                Ingresa tu correo registrado
+              <span id="email-help" className={styles['formHelp']} role="note">
+                Ingresa el correo electrónico asociado a tu cuenta de Zinema
               </span>
             </div>
 
             {error && (
-              <p role="alert" className={styles['formHelp']} style={{ color: '#ffb3b3' }}>
-                {error}
-              </p>
+              <div role="alert" aria-live="assertive" className={styles['formHelp']} style={{ color: '#ffb3b3' }}>
+                <strong>Error:</strong> {error}
+              </div>
             )}
 
-            <button type="submit" className={styles['btn']} disabled={submitting}>
+            <button 
+              type="submit" 
+              className={styles['btn']} 
+              disabled={submitting}
+              aria-busy={submitting}
+              aria-label={submitting ? 'Enviando enlace de recuperación, por favor espera' : 'Enviar enlace de recuperación'}
+            >
               {submitting ? 'Enviando…' : 'Enviar enlace'}
             </button>
 
-            <div className={styles['links']}>
+            <div className={styles['links']} role="complementary">
               <p>
                 ¿Recordaste tu contraseña?{' '}
-                <a href="/login" className={styles['link']}>
+                <a href="/login" className={styles['link']} aria-label="Ir a página de inicio de sesión">
                   Inicia sesión
                 </a>
               </p>

@@ -17,8 +17,18 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
     .filter(Boolean)
     .join(' ');
 
+  // Ensure the button has proper type attribute if not provided
+  const buttonType = rest.type || 'button';
+
   return (
-    <button ref={ref} className={classes} disabled={disabled} {...rest}>
+    <button 
+      ref={ref} 
+      className={classes} 
+      disabled={disabled} 
+      aria-disabled={disabled}
+      type={buttonType as 'button' | 'submit' | 'reset'}
+      {...rest}
+    >
       {children}
     </button>
   );

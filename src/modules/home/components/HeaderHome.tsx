@@ -15,6 +15,7 @@
  * ```
  */
 import React, { useState, useRef, useEffect } from 'react';
+import { isAuthenticated } from '../../../lib/auth/useAuth';
 import styles from './HeaderHome.module.scss';
 
 export function HeaderHome(): JSX.Element {
@@ -41,39 +42,56 @@ export function HeaderHome(): JSX.Element {
     <header className={styles['header']} role="banner">
       <div className={styles['header__bar']}>
         <div className={styles['header__logo']} aria-label="Zinema">
-          <img 
-            src="/images/logos/zinemalogo.png" 
-            alt="Zinema" 
-            width="120" 
-            height="40"
-          />
+          <a href={isAuthenticated() ? '/home' : '/landing'} aria-label="Ir al inicio">
+            <img 
+              src="/images/logos/zinemalogo.png" 
+              alt="Zinema" 
+              width="120" 
+              height="40"
+            />
+          </a>
         </div>
         
-        <nav className={styles['header__nav']} aria-label="Main navigation">
-          <a href="/home" className={styles['header__link']}>Inicio</a>
-          <a href="/movies" className={styles['header__link']}>Películas</a>
-          <a href="/series" className={styles['header__link']}>Series</a>
-          <a href="/my-list" className={styles['header__link']}>Mi Lista</a>
+        <nav className={styles['header__nav']} aria-label="Navegación principal" role="navigation">
+          <a href="/home" className={styles['header__link']} aria-label="Ir a página de inicio" aria-current="page">Inicio</a>
+          <a href="/movies" className={styles['header__link']} aria-label="Ir a catálogo de películas">Películas</a>
+          <a href="/series" className={styles['header__link']} aria-label="Ir a catálogo de series">Series</a>
+          <a href="/my-list" className={styles['header__link']} aria-label="Ir a mi lista de favoritos">Mi Lista</a>
         </nav>
 
         <div className={styles['header__user']} ref={dropdownRef}>
           <button 
             className={styles['header__btn']}
             type="button"
-            aria-label="User menu"
+            aria-label={isDropdownOpen ? "Cerrar menú de usuario" : "Abrir menú de usuario"}
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
             aria-expanded={isDropdownOpen}
+            aria-haspopup="menu"
+            aria-controls="user-menu"
           >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
               <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
               <circle cx="12" cy="7" r="4" />
             </svg>
+            <span className="visually-hidden">
+              {isDropdownOpen ? 'Cerrar menú de usuario' : 'Abrir menú de usuario'}
+            </span>
           </button>
 
           {isDropdownOpen && (
-            <div className={styles['header__dropdown']}>
-              <a href="/profile" className={styles['header__dropdown-item']}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <div 
+              id="user-menu"
+              className={styles['header__dropdown']} 
+              role="menu" 
+              aria-label="Menú de usuario"
+            >
+              <a 
+                href="/profile" 
+                className={styles['header__dropdown-item']} 
+                role="menuitem"
+                aria-label="Ir a mi perfil"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
                   <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
                   <circle cx="12" cy="7" r="4" />
                 </svg>
@@ -82,8 +100,11 @@ export function HeaderHome(): JSX.Element {
               <button 
                 className={styles['header__dropdown-item']}
                 onClick={handleLogout}
+                role="menuitem"
+                aria-label="Cerrar sesión y salir de la aplicación"
+                type="button"
               >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
                   <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
                   <polyline points="16,17 21,12 16,7" />
                   <line x1="21" y1="12" x2="9" y2="12" />
