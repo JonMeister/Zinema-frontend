@@ -19,16 +19,39 @@ export interface ToastProps {
 }
 
 export function Toast({ id, message, variant = 'success', onClose }: ToastProps): JSX.Element {
+  // Map variants to appropriate aria attributes
+  const getAriaLive = () => {
+    if (variant === 'error') return 'assertive';
+    return 'polite';
+  };
+
+  const getAriaLabel = () => {
+    if (variant === 'success') return 'Notificación de éxito';
+    if (variant === 'error') return 'Notificación de error';
+    if (variant === 'warning') return 'Notificación de advertencia';
+    return 'Notificación';
+  };
+
   return (
-    <div className={`${styles['toast']} ${styles[`toast--${variant}`]}`} role="status" aria-live="polite">
-      <span className={styles['toast__message']}>{message}</span>
+    <div 
+      className={`${styles['toast']} ${styles[`toast--${variant}`]}`} 
+      role={variant === 'error' ? 'alert' : 'status'} 
+      aria-live={getAriaLive()}
+      aria-atomic="true"
+      aria-label={getAriaLabel()}
+    >
+      <span className={styles['toast__message']} id={`toast-message-${id}`}>
+        {message}
+      </span>
       <button
         type="button"
         className={styles['toast__close']}
-        aria-label="Close notification"
+        aria-label={`Cerrar notificación: ${message}`}
+        aria-describedby={`toast-message-${id}`}
         onClick={() => onClose(id)}
       >
-        ×
+        <span aria-hidden="true">×</span>
+        <span className="visually-hidden">Cerrar</span>
       </button>
     </div>
   );

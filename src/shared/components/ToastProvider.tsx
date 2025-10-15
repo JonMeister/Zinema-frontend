@@ -16,7 +16,7 @@ interface ToastItem {
  */
 interface ToastContextValue {
   /** Shows a new toast with the given message. */
-  showToast: (message: string, variant?: 'success' | 'error' | 'warning') => void;
+  showToast: (message: string, variant?: 'success' | 'error' | 'warning', delay?: number) => void;
   /** Dismisses a toast by id. */
   dismissToast: (id: string) => void;
 }
@@ -52,9 +52,16 @@ export function ToastProvider({ children }: { children: React.ReactNode }): JSX.
     setItems(prev => prev.filter(t => t.id !== id));
   }, []);
 
-  const showToast = useCallback((message: string, variant: 'success' | 'error' | 'warning' = 'success') => {
+  const showToast = useCallback((message: string, variant: 'success' | 'error' | 'warning' = 'success', delay: number = 0) => {
     const id = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
-    setItems(prev => [...prev, { id, message, variant }]);
+    
+    if (delay > 0) {
+      setTimeout(() => {
+        setItems(prev => [...prev, { id, message, variant }]);
+      }, delay);
+    } else {
+      setItems(prev => [...prev, { id, message, variant }]);
+    }
   }, []);
 
   const value = useMemo(() => ({ showToast, dismissToast }), [showToast, dismissToast]);
@@ -85,7 +92,11 @@ export function ToastProvider({ children }: { children: React.ReactNode }): JSX.
  * @example
  * ```tsx
  * const { showToast } = useToast();
+ * // Show immediately
  * showToast('Operation successful!', 'success');
+ * 
+ * // Show with delay (useful before navigation)
+ * showToast('Redirecting...', 'success', 500);
  * ```
  */
 export function useToast(): ToastContextValue {

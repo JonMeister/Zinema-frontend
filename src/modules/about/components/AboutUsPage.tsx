@@ -31,24 +31,29 @@ const teamMembers: TeamMember[] = [
 export function AboutUsPage(): JSX.Element {
   const authenticated = isAuthenticated();
 
+  // Set page title for screen readers
+  React.useEffect(() => {
+    document.title = 'Sobre Nosotros - Zinema';
+  }, []);
+
   return (
     <div className={styles['page']}>
       {authenticated && <HeaderHome />}
       
-      <main className={styles['main']}>
+      <main id="main-content" className={styles['main']} role="main" aria-labelledby="about-title">
         <div className={styles['container']}>
           {/* Hero Section */}
-          <section className={styles['hero']}>
-            <h1 className={styles['title']}>Sobre Nosotros</h1>
+          <section className={styles['hero']} aria-labelledby="about-title">
+            <h1 id="about-title" className={styles['title']}>Sobre Nosotros</h1>
             <p className={styles['subtitle']}>
               Creando experiencias de entretenimiento digital excepcionales
             </p>
           </section>
 
           {/* Company Section */}
-          <section className={styles['company']}>
+          <section className={styles['company']} aria-labelledby="company-title">
             <div className={styles['company-content']}>
-              <h2 className={styles['section-title']}>InnoJI Software Development</h2>
+              <h2 id="company-title" className={styles['section-title']}>InnoJI Software Development</h2>
               <p className={styles['description']}>
                 Somos un equipo apasionado de desarrolladores dedicados a crear soluciones 
                 innovadoras en el mundo del entretenimiento digital. Nuestra misión es 
@@ -65,11 +70,11 @@ export function AboutUsPage(): JSX.Element {
           </section>
 
           {/* Team Section */}
-          <section className={styles['team']}>
-            <h2 className={styles['section-title']}>Nuestro Equipo</h2>
-            <div className={styles['team-grid']}>
+          <section className={styles['team']} aria-labelledby="team-title">
+            <h2 id="team-title" className={styles['section-title']}>Nuestro Equipo</h2>
+            <div className={styles['team-grid']} role="list" aria-label="Miembros del equipo">
               {teamMembers.map((member, index) => (
-                <div key={index} className={styles['team-card']}>
+                <article key={index} className={styles['team-card']} role="listitem">
                   <div className={styles['avatar']} role="img" aria-label={`Avatar de ${member.name}`}>
                     <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
                       <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
@@ -78,16 +83,16 @@ export function AboutUsPage(): JSX.Element {
                   </div>
                   <h3 className={styles['member-name']}>{member.name}</h3>
                   <p className={styles['member-role']}>{member.role}</p>
-                </div>
+                </article>
               ))}
             </div>
           </section>
 
           {/* Values Section */}
-          <section className={styles['values']}>
-            <h2 className={styles['section-title']}>Nuestros Valores</h2>
-            <div className={styles['values-grid']}>
-              <div className={styles['value-card']}>
+          <section className={styles['values']} aria-labelledby="values-title">
+            <h2 id="values-title" className={styles['section-title']}>Nuestros Valores</h2>
+            <div className={styles['values-grid']} role="list" aria-label="Valores de la empresa">
+              <article className={styles['value-card']} role="listitem">
                 <div className={styles['value-icon']} role="img" aria-label="Icono de innovación">
                   <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
                     <path d="M12 2L2 7l10 5 10-5-10-5z" />
@@ -98,9 +103,9 @@ export function AboutUsPage(): JSX.Element {
                 <p className={styles['value-description']}>
                   Buscamos constantemente nuevas formas de mejorar la experiencia del usuario
                 </p>
-              </div>
+              </article>
 
-              <div className={styles['value-card']}>
+              <article className={styles['value-card']} role="listitem">
                 <div className={styles['value-icon']} role="img" aria-label="Icono de colaboración">
                   <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
                     <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
@@ -112,9 +117,9 @@ export function AboutUsPage(): JSX.Element {
                 <p className={styles['value-description']}>
                   Trabajamos en equipo para alcanzar objetivos comunes
                 </p>
-              </div>
+              </article>
 
-              <div className={styles['value-card']}>
+              <article className={styles['value-card']} role="listitem">
                 <div className={styles['value-icon']} role="img" aria-label="Icono de calidad">
                   <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
                     <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
@@ -125,9 +130,9 @@ export function AboutUsPage(): JSX.Element {
                 <p className={styles['value-description']}>
                   Nos comprometemos con la excelencia en cada línea de código
                 </p>
-              </div>
+              </article>
 
-              <div className={styles['value-card']}>
+              <article className={styles['value-card']} role="listitem">
                 <div className={styles['value-icon']} role="img" aria-label="Icono de seguridad">
                   <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
                     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
@@ -137,32 +142,32 @@ export function AboutUsPage(): JSX.Element {
                 <p className={styles['value-description']}>
                   Protegemos la privacidad y datos de nuestros usuarios
                 </p>
-              </div>
+              </article>
             </div>
           </section>
 
           {/* CTA Section */}
-          <section className={styles['cta']}>
-            <h2 className={styles['cta-title']}>¿Listo para comenzar?</h2>
+          <section className={styles['cta']} aria-labelledby="cta-title">
+            <h2 id="cta-title" className={styles['cta-title']}>¿Listo para comenzar?</h2>
             <p className={styles['cta-description']}>
               Únete a miles de usuarios que ya disfrutan de Zinema
             </p>
-            <div className={styles['cta-buttons']}>
+            <nav className={styles['cta-buttons']} role="navigation" aria-label="Acciones de llamado a la acción">
               {!authenticated ? (
                 <>
-                  <a href="/signup" className={styles['btn-primary']}>
+                  <a href="/signup" className={styles['btn-primary']} aria-label="Ir a página de registro para crear cuenta">
                     Crear Cuenta
                   </a>
-                  <a href="/login" className={styles['btn-secondary']}>
+                  <a href="/login" className={styles['btn-secondary']} aria-label="Ir a página de inicio de sesión">
                     Iniciar Sesión
                   </a>
                 </>
               ) : (
-                <a href="/home" className={styles['btn-primary']}>
+                <a href="/home" className={styles['btn-primary']} aria-label="Volver a la página de inicio">
                   Ir al Inicio
                 </a>
               )}
-            </div>
+            </nav>
           </section>
         </div>
       </main>

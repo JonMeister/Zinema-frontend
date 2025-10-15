@@ -38,6 +38,11 @@ export function SignupPage(): JSX.Element {
   /** Toast API for user feedback. */
   const { showToast } = useToast();
 
+  // Set page title for screen readers
+  React.useEffect(() => {
+    document.title = 'Crear Cuenta - Zinema';
+  }, []);
+
   /**
    * Updates the corresponding field in {@link formData} when an input changes.
    */
@@ -81,26 +86,28 @@ export function SignupPage(): JSX.Element {
       return;
     }
 
-    showToast('Cuenta creada con éxito', 'success');
-    // On success, redirect to home (rudimentary routing)
-    window.location.href = '/';
+    showToast('Cuenta creada con éxito', 'success', 500);
+    // On success, redirect to home (rudimentary routing) with delay to show toast
+    setTimeout(() => {
+      window.location.href = '/';
+    }, 1000);
   };
 
   return (
     <div className={styles['page']}>
-      <main className={styles['main']}>
+      <main id="main-content" className={styles['main']} role="main" aria-labelledby="signup-title">
         <div className={styles['container']}>
           <div className={styles['header']}>
-            <h1 className={styles['title']}>Crear cuenta</h1>
+            <h1 id="signup-title" className={styles['title']}>Crear cuenta</h1>
             <p className={styles['subtitle']}>
               Únete a Zinema y disfruta de películas y series ilimitadas
             </p>
           </div>
 
-          <form className={styles['form']} onSubmit={handleSubmit} noValidate>
+          <form className={styles['form']} onSubmit={handleSubmit} noValidate aria-labelledby="signup-title">
             <div className={styles['formGroup']}>
               <label htmlFor="firstName" className={styles['formLabel']}>
-                Nombre
+                Nombre <span aria-label="requerido">*</span>
               </label>
               <input
                 type="text"
@@ -110,16 +117,19 @@ export function SignupPage(): JSX.Element {
                 onChange={handleInputChange}
                 className={styles['formInput']}
                 required
+                aria-required="true"
                 aria-describedby="firstName-help"
+                aria-invalid={error ? 'true' : 'false'}
+                placeholder="Ej: Juan"
               />
-              <span id="firstName-help" className={styles['formHelp']}>
-                Tu nombre
+              <span id="firstName-help" className={styles['formHelp']} role="note">
+                Ingresa tu nombre de pila
               </span>
             </div>
 
             <div className={styles['formGroup']}>
               <label htmlFor="lastName" className={styles['formLabel']}>
-                Apellido
+                Apellido <span aria-label="requerido">*</span>
               </label>
               <input
                 type="text"
@@ -129,16 +139,19 @@ export function SignupPage(): JSX.Element {
                 onChange={handleInputChange}
                 className={styles['formInput']}
                 required
+                aria-required="true"
                 aria-describedby="lastName-help"
+                aria-invalid={error ? 'true' : 'false'}
+                placeholder="Ej: Pérez"
               />
-              <span id="lastName-help" className={styles['formHelp']}>
-                Tu apellido
+              <span id="lastName-help" className={styles['formHelp']} role="note">
+                Ingresa tu apellido
               </span>
             </div>
 
             <div className={styles['formGroup']}>
               <label htmlFor="age" className={styles['formLabel']}>
-                Edad
+                Edad <span aria-label="requerido">*</span>
               </label>
               <input
                 type="number"
@@ -148,18 +161,21 @@ export function SignupPage(): JSX.Element {
                 onChange={handleInputChange}
                 className={styles['formInput']}
                 required
+                aria-required="true"
                 min="13"
                 max="120"
                 aria-describedby="age-help"
+                aria-invalid={error ? 'true' : 'false'}
+                placeholder="Ej: 25"
               />
-              <span id="age-help" className={styles['formHelp']}>
-                Debes tener al menos 13 años
+              <span id="age-help" className={styles['formHelp']} role="note">
+                Debes tener al menos 13 años para crear una cuenta. El rango válido es de 13 a 120 años
               </span>
             </div>
 
             <div className={styles['formGroup']}>
               <label htmlFor="email" className={styles['formLabel']}>
-                Correo electrónico
+                Correo electrónico <span aria-label="requerido">*</span>
               </label>
               <input
                 type="email"
@@ -169,16 +185,19 @@ export function SignupPage(): JSX.Element {
                 onChange={handleInputChange}
                 className={styles['formInput']}
                 required
+                aria-required="true"
                 aria-describedby="email-help"
+                aria-invalid={error ? 'true' : 'false'}
+                placeholder="ejemplo@correo.com"
               />
-              <span id="email-help" className={styles['formHelp']}>
-                Usaremos este email para tu cuenta
+              <span id="email-help" className={styles['formHelp']} role="note">
+                Usaremos este correo electrónico para tu cuenta y notificaciones
               </span>
             </div>
 
             <div className={styles['formGroup']}>
               <label htmlFor="password" className={styles['formLabel']}>
-                Contraseña
+                Contraseña <span aria-label="requerido">*</span>
               </label>
               <input
                 type="password"
@@ -188,17 +207,19 @@ export function SignupPage(): JSX.Element {
                 onChange={handleInputChange}
                 className={styles['formInput']}
                 required
+                aria-required="true"
                 minLength={8}
                 aria-describedby="password-help"
+                aria-invalid={error ? 'true' : 'false'}
               />
-              <span id="password-help" className={styles['formHelp']}>
-                Mínimo 8 caracteres
+              <span id="password-help" className={styles['formHelp']} role="note">
+                La contraseña debe tener mínimo 8 caracteres. Se recomienda incluir mayúsculas, minúsculas, números y caracteres especiales
               </span>
             </div>
 
             <div className={styles['formGroup']}>
               <label htmlFor="confirmPassword" className={styles['formLabel']}>
-                Repetir contraseña
+                Repetir contraseña <span aria-label="requerido">*</span>
               </label>
               <input
                 type="password"
@@ -208,28 +229,36 @@ export function SignupPage(): JSX.Element {
                 onChange={handleInputChange}
                 className={styles['formInput']}
                 required
+                aria-required="true"
                 minLength={8}
                 aria-describedby="confirm-help"
+                aria-invalid={error ? 'true' : 'false'}
               />
-              <span id="confirm-help" className={styles['formHelp']}>
-                Repite tu contraseña
+              <span id="confirm-help" className={styles['formHelp']} role="note">
+                Repite la contraseña para confirmar que coincide
               </span>
             </div>
 
             {error && (
-              <p role="alert" className={styles['formHelp']} style={{ color: '#ffb3b3' }}>
-                {error}
-              </p>
+              <div role="alert" aria-live="assertive" className={styles['formHelp']} style={{ color: '#ffb3b3' }}>
+                <strong>Error:</strong> {error}
+              </div>
             )}
 
-            <button type="submit" className={styles['btn']} disabled={submitting}>
+            <button 
+              type="submit" 
+              className={styles['btn']} 
+              disabled={submitting}
+              aria-busy={submitting}
+              aria-label={submitting ? 'Creando cuenta, por favor espera' : 'Crear cuenta'}
+            >
               {submitting ? 'Creando…' : 'Crear cuenta'}
             </button>
 
-            <div className={styles['links']}>
+            <div className={styles['links']} role="complementary">
               <p>
                 ¿Ya tienes cuenta?{' '}
-                <a href="/login" className={styles['link']}>
+                <a href="/login" className={styles['link']} aria-label="Ir a página de inicio de sesión">
                   Inicia sesión
                 </a>
               </p>

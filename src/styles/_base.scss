@@ -13,6 +13,7 @@ body,
 body {
   margin: 0;
   font-family: 'Merriweather', Georgia, 'Times New Roman', Times, serif;
+  font-size: 16px; /* Minimum font size for accessibility */
   line-height: 1.6;
   color: var(--color-fg);
   background-color: var(--color-bg);

@@ -66,9 +66,9 @@ $shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
 $shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
 $shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.5);
 
-// Font sizes
-$font-size-xs: 0.75rem;   // 12px
-$font-size-sm: 0.875rem;  // 14px
+// Font sizes (minimum 16px for accessibility)
+$font-size-xs: 1rem;      // 16px
+$font-size-sm: 1rem;      // 16px
 $font-size-md: 1rem;      // 16px
 $font-size-lg: 1.125rem;  // 18px
 $font-size-xl: 1.25rem;   // 20px

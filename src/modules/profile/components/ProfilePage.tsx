@@ -43,6 +43,11 @@ export function ProfilePage(): JSX.Element {
   const [deleting, setDeleting] = useState(false);
   const { showToast } = useToast();
 
+  // Set page title for screen readers
+  useEffect(() => {
+    document.title = 'Indormación de mi Perfil - Zinema';
+  }, []);
+
   useEffect(() => {
     fetchProfile();
   }, []);
@@ -101,11 +106,11 @@ export function ProfilePage(): JSX.Element {
       });
 
       if (response.ok) {
-        showToast('Cuenta eliminada exitosamente', 'success');
+        showToast('Cuenta eliminada exitosamente', 'success', 500);
         localStorage.removeItem('authToken');
         setTimeout(() => {
           window.location.href = '/landing';
-        }, 1000);
+        }, 1500);
       } else {
         showToast(response.error?.message || 'Error al eliminar la cuenta', 'error');
         setDeleting(false);
@@ -136,9 +141,11 @@ export function ProfilePage(): JSX.Element {
     return (
       <div className={styles['page']}>
         <HeaderHome />
-        <main className={styles['main']}>
+        <main className={styles['main']} role="main" aria-busy="true" aria-live="polite">
           <div className={styles['container']}>
-            <div className={styles['loading']}>Cargando perfil...</div>
+            <div className={styles['loading']} role="status">
+              <span>Cargando perfil...</span>
+            </div>
           </div>
         </main>
         <Footer />
@@ -150,12 +157,16 @@ export function ProfilePage(): JSX.Element {
     return (
       <div className={styles['page']}>
         <HeaderHome />
-        <main className={styles['main']}>
+        <main className={styles['main']} role="main" aria-labelledby="error-title">
           <div className={styles['container']}>
-            <div className={styles['error']}>
-              <h2>Error al cargar el perfil</h2>
+            <div className={styles['error']} role="alert">
+              <h2 id="error-title">Error al cargar el perfil</h2>
               <p>{error}</p>
-              <button onClick={() => window.location.href = '/home'} className={styles['btn']}>
+              <button 
+                onClick={() => window.location.href = '/home'} 
+                className={styles['btn']}
+                aria-label="Volver a la página de inicio"
+              >
                 Volver al inicio
               </button>
             </div>
@@ -170,65 +181,79 @@ export function ProfilePage(): JSX.Element {
     <div className={styles['page']}>
       <HeaderHome />
 
-      <main className={styles['main']}>
+      <main className={styles['main']} role="main" aria-labelledby="profile-title">
         <div className={styles['container']}>
           <div className={styles['header']}>
-            <h1 className={styles['title']}>Mi Perfil</h1>
+            <h1 id="profile-title" className={styles['title']}>Mi Perfil</h1>
           </div>
 
-          <div className={styles['card']}>
-            <div className={styles['avatar']} role="img" aria-label="Avatar de usuario">
+          <section className={styles['card']} aria-labelledby="profile-title">
+            <div className={styles['avatar']} role="img" aria-label="Avatar de usuario predeterminado">
               <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
                 <circle cx="12" cy="7" r="4" />
               </svg>
             </div>
 
-            <div className={styles['info']}>
-              <div className={styles['info-group']}>
-                <label className={styles['label']}>Nombre Completo</label>
-                <p className={styles['value']}>{profile.firstName} {profile.lastName}</p>
+            <div className={styles['info']} role="list" aria-label="Información del perfil">
+              <div className={styles['info-group']} role="listitem">
+                <span className={styles['label']} id="full-name-label">Nombre Completo</span>
+                <p className={styles['value']} aria-labelledby="full-name-label">{profile.firstName} {profile.lastName}</p>
               </div>
 
-              <div className={styles['info-group']}>
-                <label className={styles['label']}>Correo Electrónico</label>
-                <p className={styles['value']}>{profile.email}</p>
+              <div className={styles['info-group']} role="listitem">
+                <span className={styles['label']} id="email-label">Correo Electrónico</span>
+                <p className={styles['value']} aria-labelledby="email-label">{profile.email}</p>
               </div>
 
-              <div className={styles['info-group']}>
-                <label className={styles['label']}>Edad</label>
-                <p className={styles['value']}>{profile.age} años</p>
+              <div className={styles['info-group']} role="listitem">
+                <span className={styles['label']} id="age-label">Edad</span>
+                <p className={styles['value']} aria-labelledby="age-label">{profile.age} años</p>
               </div>
 
-              <div className={styles['info-group']}>
-                <label className={styles['label']}>Miembro desde</label>
-                <p className={styles['value']}>{formatDate(profile.createdAt)}</p>
+              <div className={styles['info-group']} role="listitem">
+                <span className={styles['label']} id="member-since-label">Miembro desde</span>
+                <p className={styles['value']} aria-labelledby="member-since-label">{formatDate(profile.createdAt)}</p>
               </div>
 
               {profile.updatedAt !== profile.createdAt && (
-                <div className={styles['info-group']}>
-                  <label className={styles['label']}>Última actualización</label>
-                  <p className={styles['value']}>{formatDate(profile.updatedAt)}</p>
+                <div className={styles['info-group']} role="listitem">
+                  <span className={styles['label']} id="last-updated-label">Última actualización</span>
+                  <p className={styles['value']} aria-labelledby="last-updated-label">{formatDate(profile.updatedAt)}</p>
                 </div>
               )}
             </div>
-          </div>
+          </section>
 
-          <div className={styles['actions']}>
-            <a href="/profile/edit" className={styles['btn-primary']}>
+          <div className={styles['actions']} role="group" aria-label="Acciones de perfil">
+          <a href="/profile/edit" className={styles['btn-primary']} aria-label="Ir a página de editar perfil">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+              </svg>
               Editar Perfil
+            </a>
+            <a href="/home" className={styles['btn-secondary']} aria-label="Volver a la página de inicio">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+              </svg>
+              Volver al Inicio
             </a>
           </div>
 
-          <div className={styles['danger-zone']}>
-            <h2 className={styles['danger-title']}>Zona de peligro</h2>
+          <section className={styles['danger-zone']} aria-labelledby="danger-zone-title">
+            <h2 id="danger-zone-title" className={styles['danger-title']}>Zona de peligro</h2>
             <p className={styles['danger-text']}>
               Una vez que elimines tu cuenta, no hay vuelta atrás. Por favor, estate seguro.
             </p>
-            <button onClick={handleDeleteAccount} className={styles['btn-danger']}>
+            <button 
+              onClick={handleDeleteAccount} 
+              className={styles['btn-danger']}
+              aria-label="Abrir modal para eliminar cuenta permanentemente"
+            >
               Eliminar Cuenta
             </button>
-          </div>
+          </section>
         </div>
       </main>
 
@@ -236,28 +261,47 @@ export function ProfilePage(): JSX.Element {
 
       {/* Modal de confirmación para eliminar cuenta */}
       {showDeleteModal && (
-        <div className={styles['modal-overlay']}>
+        <div 
+          className={styles['modal-overlay']} 
+          role="dialog" 
+          aria-modal="true" 
+          aria-labelledby="modal-title"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) cancelDeleteAccount();
+          }}
+        >
           <div className={styles['modal']}>
-            <h3 className={styles['modal-title']}>Eliminar Cuenta</h3>
-            <p className={styles['modal-text']}>
+            <h3 id="modal-title" className={styles['modal-title']}>Eliminar Cuenta</h3>
+            <p className={styles['modal-text']} role="alert">
               Esta acción es irreversible. Todos tus datos serán eliminados permanentemente.
             </p>
             <p className={styles['modal-instruction']}>
               Para confirmar, escribe <strong>ELIMINAR</strong> en el campo de abajo:
             </p>
+            <label htmlFor="delete-confirmation" className="visually-hidden">
+              Escribe ELIMINAR para confirmar
+            </label>
             <input
               type="text"
+              id="delete-confirmation"
               value={deleteConfirmation}
               onChange={(e) => setDeleteConfirmation(e.target.value)}
               placeholder="Escribe ELIMINAR aquí"
               className={styles['modal-input']}
               disabled={deleting}
+              aria-required="true"
+              aria-describedby="delete-instruction"
+              autoFocus
             />
-            <div className={styles['modal-actions']}>
+            <span id="delete-instruction" className="visually-hidden">
+              Debes escribir la palabra ELIMINAR en mayúsculas para confirmar la eliminación de tu cuenta
+            </span>
+            <div className={styles['modal-actions']} role="group" aria-label="Acciones del modal">
               <button
                 onClick={cancelDeleteAccount}
                 className={styles['btn-cancel']}
                 disabled={deleting}
+                aria-label="Cancelar eliminación de cuenta"
               >
                 Cancelar
               </button>
@@ -265,6 +309,8 @@ export function ProfilePage(): JSX.Element {
                 onClick={confirmDeleteAccount}
                 className={styles['btn-confirm-delete']}
                 disabled={deleting || deleteConfirmation.toLowerCase() !== 'eliminar'}
+                aria-label="Confirmar eliminación permanente de cuenta"
+                aria-busy={deleting}
               >
                 {deleting ? 'Eliminando...' : 'Eliminar Cuenta'}
               </button>

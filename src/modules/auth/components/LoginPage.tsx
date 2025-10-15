@@ -36,6 +36,11 @@ export function LoginPage(): JSX.Element {
   /** Authentication hook. */
   const { login } = useAuth();
 
+  // Set page title for screen readers
+  React.useEffect(() => {
+    document.title = 'Iniciar Sesión en Zinema';
+  }, []);
+
   /**
    * Updates the corresponding field in {@link formData} when an input changes.
    */
@@ -80,37 +85,37 @@ export function LoginPage(): JSX.Element {
       login(res.data.token);
     }
 
-    showToast('Sesión iniciada con éxito', 'success');
-    // On success, redirect to home
+    showToast('Sesión iniciada con éxito', 'success', 500);
+    // On success, redirect to home with delay to show toast
     setTimeout(() => {
       window.location.href = '/home';
-    }, 500);
+    }, 1000);
   };
 
   return (
     <div className={styles['page']}>
-      <main className={styles['main']}>
+      <main id="main-content" className={styles['main']} role="main" aria-labelledby="login-title">
         <div className={styles['container']}>
           <div className={styles['header']}>
-            <div className={styles['title']} aria-label="zinemalogo">
-              <a href="/landing" aria-label="Ir al inicio">
+            <div className={styles['title']}>
+              <a href="/landing" aria-label="Volver a página principal de Zinema">
                 <img
                   src="/images/logos/zinemalogo.png"
-                  alt="zinemalogo"
+                  alt="Logo de Zinema"
                   width="200"
                   height="50"
                 />
               </a>
             </div>
-            <p className={styles['subtitle']}>
+            <h1 id="login-title" className={styles['subtitle']}>
               Inicia sesión para continuar
-            </p>
+            </h1>
           </div>
 
-          <form className={styles['form']} onSubmit={handleSubmit} noValidate>
+          <form className={styles['form']} onSubmit={handleSubmit} noValidate aria-labelledby="login-title">
             <div className={styles['formGroup']}>
               <label htmlFor="email" className={styles['formLabel']}>
-                Correo electrónico
+                Correo electrónico <span aria-label="requerido">*</span>
               </label>
               <input
                 type="email"
@@ -120,16 +125,19 @@ export function LoginPage(): JSX.Element {
                 onChange={handleInputChange}
                 className={styles['formInput']}
                 required
+                aria-required="true"
                 aria-describedby="email-help"
+                aria-invalid={error ? 'true' : 'false'}
+                placeholder="ejemplo@correo.com"
               />
-              <span id="email-help" className={styles['formHelp']}>
-                Ingresa tu correo
+              <span id="email-help" className={styles['formHelp']} role="note">
+                Ingresa el correo electrónico asociado a tu cuenta
               </span>
             </div>
 
             <div className={styles['formGroup']}>
               <label htmlFor="password" className={styles['formLabel']}>
-                Contraseña
+                Contraseña <span aria-label="requerido">*</span>
               </label>
               <input
                 type="password"
@@ -139,34 +147,42 @@ export function LoginPage(): JSX.Element {
                 onChange={handleInputChange}
                 className={styles['formInput']}
                 required
+                aria-required="true"
                 minLength={8}
                 aria-describedby="password-help"
+                aria-invalid={error ? 'true' : 'false'}
               />
-              <span id="password-help" className={styles['formHelp']}>
-                Ingresa tu contraseña
+              <span id="password-help" className={styles['formHelp']} role="note">
+                Ingresa tu contraseña (mínimo 8 caracteres)
               </span>
             </div>
 
             {error && (
-              <p role="alert" className={styles['formHelp']} style={{ color: '#ffb3b3' }}>
-                {error}
-              </p>
+              <div role="alert" aria-live="assertive" className={styles['formHelp']} style={{ color: '#ffb3b3' }}>
+                <strong>Error:</strong> {error}
+              </div>
             )}
 
             <div className={styles['links']}>
-              <a href="/password-recovery" className={styles['link']}>
+              <a href="/password-recovery" className={styles['link']} aria-label="Ir a página de recuperación de contraseña">
                 Olvidé mi contraseña
               </a>
             </div>
 
-            <button type="submit" className={styles['btn']} disabled={submitting}>
+            <button 
+              type="submit" 
+              className={styles['btn']} 
+              disabled={submitting}
+              aria-busy={submitting}
+              aria-label={submitting ? 'Iniciando sesión, por favor espera' : 'Iniciar sesión'}
+            >
               {submitting ? 'Iniciando…' : 'Iniciar sesión'}
             </button>
 
-            <div className={styles['links']}>
+            <div className={styles['links']} role="complementary">
               <p>
                 ¿No tienes una cuenta?{' '}
-                <a href="/signup" className={styles['link']}>
+                <a href="/signup" className={styles['link']} aria-label="Ir a página de registro">
                   Regístrate ahora
                 </a>
               </p>
