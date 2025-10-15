@@ -1,0 +1,53 @@
+@use '../../../styles/tokens' as *;
+@use '../../../styles/mixins' as *;
+
+.page {
+  min-height: 100vh;
+  background: radial-gradient(120% 100% at 0% 0%, #{$grad-1} 0%, #{$grad-2} 45%, #{$grad-3} 100%);
+  color: $color-fg;
+  display: flex;
+  flex-direction: column;
+}
+
+.main {
+  flex: 1;
+  @include container(1400px);
+  padding: var(--space-4);
+}
+
+.hero {
+  padding: 3rem 0;
+  text-align: center;
+
+  &__title {
+    font-family: 'Merriweather', Georgia, serif;
+    font-size: 3rem;
+    font-weight: 900;
+    margin: 0 0 var(--space-3) 0;
+    color: $color-logo-text;
+  }
+
+  &__subtitle {
+    font-family: 'Merriweather', Georgia, serif;
+    font-size: 1.25rem;
+    font-weight: 300;
+    margin: 0;
+    color: $text-ghost;
+    opacity: 0.8;
+  }
+}
+
+@media (max-width: $bp-md) {
+  .hero {
+    padding: 2rem 0;
+
+    &__title {
+      font-size: 2rem;
+    }
+
+    &__subtitle {
+      font-size: 1rem;
+    }
+  }
+}
+

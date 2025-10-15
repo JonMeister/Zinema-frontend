@@ -1,0 +1,97 @@
+@use "sass:color";
+
+// Core palette
+// Background of the app (body)
+$color-bg: #0b0b0c;
+// Default foreground text color
+$color-fg: #f5f6f7;
+// Brand accent for CTAs, focus, and primary buttons
+$color-accent: #7c4dff;
+// Light text used on hero/landing and dark overlays
+$color-hero-text: #f5e7ff;
+// Light brand text (logo wordmark, titles)
+$color-logo-text: #f1d9ff;
+// Button filled/background accent
+$color-button-accent: #a66bff;
+// Button filled/text color on accent backgrounds
+$color-button-text: #2b0c59;
+// Overlays and effects
+// Strong translucent dark panel (containers/footer)
+$overlay-strong: rgba(0, 0, 0, 0.7);
+// Subtle translucent white overlay
+$overlay-soft: rgba(255, 255, 255, 0.1);
+// Big soft shadow for images/cards
+$shadow-xl: 0 20px 60px rgba(0, 0, 0, 0.45);
+
+// Gradient stops (landing/signup backgrounds)
+$grad-1: #2b0c59;
+$grad-2: #1a0936;
+$grad-3: #0c051c;
+
+// Semantic helpers
+// Subtle hairline borders for panels on dark bg
+$border-subtle: rgba(255, 255, 255, 0.1);
+// Inverse text (on dark/brand surfaces)
+$text-inverse: #ffffff;
+// Primary text color (headings, labels)
+$text-primary: #f5f6f7;
+// Secondary text color (subtitles, descriptions)
+$text-secondary: #d1c4e9;
+// Light ghost text (ghost buttons, subtle labels)
+$text-ghost: #f2dfff;
+// Muted text for placeholders/help
+$text-muted: rgba(245, 231, 255, 0.6);
+// Muted placeholder variant
+$text-placeholder: rgba(245, 231, 255, 0.5);
+
+// Spacing scale
+$space-1: 0.25rem; // 4px
+$space-2: 0.5rem;  // 8px
+$space-3: 1rem;    // 16px
+$space-4: 1.5rem;  // 24px
+$space-5: 2rem;    // 32px
+$space-6: 2.5rem;  // 40px
+$space-7: 3rem;    // 48px
+$space-8: 4rem;    // 64px
+$space-9: 5rem;    // 80px
+$space-10: 6rem;   // 96px
+
+// Radii
+$radius-sm: 0.25rem;
+$radius-md: 0.5rem;
+$radius-lg: 1rem;
+
+// Shadows
+$shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+$shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+$shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.5);
+
+// Font sizes (minimum 16px for accessibility)
+$font-size-xs: 1rem;      // 16px
+$font-size-sm: 1rem;      // 16px
+$font-size-md: 1rem;      // 16px
+$font-size-lg: 1.125rem;  // 18px
+$font-size-xl: 1.25rem;   // 20px
+$font-size-2xl: 1.5rem;   // 24px
+$font-size-3xl: 2rem;     // 32px
+$font-size-4xl: 2.5rem;   // 40px
+
+// Font weights
+$font-weight-normal: 400;
+$font-weight-medium: 500;
+$font-weight-semibold: 600;
+$font-weight-bold: 700;
+
+// Additional colors
+$color-surface: rgba(255, 255, 255, 0.05);
+$color-surface-hover: rgba(255, 255, 255, 0.08);
+$color-primary: $color-accent;
+$color-primary-dark: color.scale($color-accent, $lightness: -10%);
+$color-primary-light: rgba($color-accent, 0.15);
+$color-border: $border-subtle;
+
+// Breakpoints
+$bp-md: 768px;
+$bp-lg: 1024px;
+
+

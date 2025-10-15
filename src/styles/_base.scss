@@ -1,0 +1,43 @@
+@use './tokens' as *;
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: 'Merriweather', Georgia, 'Times New Roman', Times, serif;
+  font-size: 16px; /* Minimum font size for accessibility */
+  line-height: 1.6;
+  color: var(--color-fg);
+  background-color: var(--color-bg);
+}
+
+main {
+  padding: var(--space-4);
+}
+
+a {
+  color: inherit;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@media (max-width: $bp-md) {
+  main {
+    padding: var(--space-3);
+  }
+}
+

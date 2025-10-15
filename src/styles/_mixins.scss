@@ -1,0 +1,29 @@
+@use 'sass:color';
+@use './tokens' as *;
+
+@mixin focus-ring($color: $color-accent) {
+  outline: 3px solid color.scale($color, $alpha: -50%);
+  outline-offset: 2px;
+}
+
+@mixin panel($bg: $overlay-strong) {
+  background: $bg;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-xl;
+}
+
+@mixin container($max: 1200px) {
+  max-width: $max;
+  margin: 0 auto;
+}
+
+@mixin btn-pill($bg, $fg) {
+  border-radius: 999px;
+  padding: 0.5rem 1rem;
+  border: 2px solid $bg;
+  background: $bg;
+  color: $fg;
+  font-weight: 700;
+}
+
+
