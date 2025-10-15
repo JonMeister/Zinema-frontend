@@ -1,13 +1,30 @@
 /**
- * Home page for authenticated users.
+ * Home page component for authenticated users.
  *
- * Displays the main application header and content area.
+ * Serves as the main landing page after user authentication.
+ * Displays welcome message, navigation header, and application footer.
+ * Includes proper semantic HTML and ARIA attributes for accessibility.
+ * 
+ * @component
+ * @returns {JSX.Element} The authenticated home page with header, content, and footer
+ * 
+ * @example
+ * ```tsx
+ * // Renders authenticated home page
+ * <HomePage />
+ * ```
  */
 import React, { useEffect } from 'react';
 import { HeaderHome } from './HeaderHome';
 import { Footer } from '@/modules/shared/components/Footer';
 import styles from './HomePage.module.scss';
 
+/**
+ * Renders the main home page for authenticated users.
+ * Sets the page title and displays welcome content.
+ * 
+ * @returns {JSX.Element} Complete home page layout
+ */
 export function HomePage(): JSX.Element {
   // Set page title for screen readers
   useEffect(() => {
