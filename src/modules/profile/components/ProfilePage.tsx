@@ -141,7 +141,7 @@ export function ProfilePage(): JSX.Element {
     return (
       <div className={styles['page']}>
         <HeaderHome />
-        <main className={styles['main']} role="main" aria-busy="true" aria-live="polite">
+        <main id="main-content" className={styles['main']} role="main" aria-busy="true" aria-live="polite">
           <div className={styles['container']}>
             <div className={styles['loading']} role="status">
               <span>Cargando perfil...</span>
@@ -157,7 +157,7 @@ export function ProfilePage(): JSX.Element {
     return (
       <div className={styles['page']}>
         <HeaderHome />
-        <main className={styles['main']} role="main" aria-labelledby="error-title">
+        <main id="main-content" className={styles['main']} role="main" aria-labelledby="error-title">
           <div className={styles['container']}>
             <div className={styles['error']} role="alert">
               <h2 id="error-title">Error al cargar el perfil</h2>
@@ -181,7 +181,7 @@ export function ProfilePage(): JSX.Element {
     <div className={styles['page']}>
       <HeaderHome />
 
-      <main className={styles['main']} role="main" aria-labelledby="profile-title">
+      <main id="main-content" className={styles['main']} role="main" aria-labelledby="profile-title">
         <div className={styles['container']}>
           <div className={styles['header']}>
             <h1 id="profile-title" className={styles['title']}>Mi Perfil</h1>
