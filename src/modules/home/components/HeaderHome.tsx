@@ -40,6 +40,11 @@ export function HeaderHome(): JSX.Element {
 
   return (
     <header className={styles['header']} role="banner">
+      {/* Skip to main content link for accessibility */}
+      <a href="#main-content" className={styles['skip-link']}>
+        Saltar al contenido principal
+      </a>
+      
       <div className={styles['header__bar']}>
         <div className={styles['header__logo']} aria-label="Zinema">
           <a href={isAuthenticated() ? '/home' : '/landing'} aria-label="Ir al inicio">
