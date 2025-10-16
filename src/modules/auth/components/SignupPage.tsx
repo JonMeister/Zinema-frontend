@@ -86,11 +86,11 @@ export function SignupPage(): JSX.Element {
       return;
     }
 
-    showToast('Cuenta creada con éxito', 'success', 500);
-    // On success, redirect to home (rudimentary routing) with delay to show toast
+    showToast('Cuenta creada con éxito. Por favor inicia sesión.', 'success', 500);
+    // On success, redirect to login page with delay to show toast
     setTimeout(() => {
-      window.location.href = '/';
-    }, 1000);
+      window.location.href = '/login';
+    }, 1500);
   };
 
   return (

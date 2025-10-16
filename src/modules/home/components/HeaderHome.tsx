@@ -39,7 +39,17 @@ export function HeaderHome(): JSX.Element {
   };
 
   return (
-    <header className={styles['header']} role="banner">
+    <header className={styles['header']} role="banner" aria-labelledby="header-title">
+      {/* Visually hidden heading for landmark identification */}
+      <h1 id="header-title" className="visually-hidden">
+        Navegación de Zinema
+      </h1>
+      
+      {/* Skip to main content link for accessibility */}
+      <a href="#main-content" className={styles['skip-link']}>
+        Saltar al contenido principal
+      </a>
+      
       <div className={styles['header__bar']}>
         <div className={styles['header__logo']} aria-label="Zinema">
           <a href={isAuthenticated() ? '/home' : '/landing'} aria-label="Ir al inicio">

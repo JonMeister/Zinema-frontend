@@ -19,7 +19,17 @@ import styles from './HeaderLandingPage.module.scss';
 
 export function HeaderLandingPage(): JSX.Element {
   return (
-    <header className={styles['header']} role="banner">
+    <header className={styles['header']} role="banner" aria-labelledby="header-title">
+      {/* Visually hidden heading for landmark identification */}
+      <h1 id="header-title" className="visually-hidden">
+        Navegación de Zinema
+      </h1>
+      
+      {/* Skip to main content link for accessibility */}
+      <a href="#main-content" className={styles['skip-link']}>
+        Saltar al contenido principal
+      </a>
+      
       <div className={styles['header__bar']}>
         <div className={styles['header__logo']}>
           <a href="/landing" aria-label="Zinema - Ir a página principal">
