@@ -1,0 +1,187 @@
+@use '../../../styles/tokens' as *;
+@use '../../../styles/mixins' as *;
+
+// Video card
+.video-card {
+  flex: 0 0 280px;
+  width: 280px; // ensure fixed card width even if parent isn't flex
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  
+  &:hover {
+    transform: scale(1.05);
+    
+    .video-card__overlay {
+      opacity: 1;
+    }
+  }
+  
+  &:focus {
+    outline: 2px solid $color-accent;
+    outline-offset: 2px;
+    border-radius: $radius-md;
+  }
+  
+  @media (max-width: $bp-lg) {
+    flex: 0 0 240px;
+    width: 240px;
+  }
+  
+  @media (max-width: $bp-md) {
+    flex: 0 0 200px;
+    width: 200px;
+  }
+  
+  @media (max-width: $bp-sm) {
+    flex: 0 0 160px;
+    width: 160px;
+  }
+}
+
+// Image container
+.video-card__image-container {
+  position: relative;
+  width: 100%;
+  height: 160px;
+  border-radius: $radius-md;
+  overflow: hidden;
+  background: $color-surface;
+  
+  @media (max-width: $bp-lg) {
+    height: 140px;
+  }
+  
+  @media (max-width: $bp-md) {
+    height: 120px;
+  }
+  
+  @media (max-width: $bp-sm) {
+    height: 100px;
+  }
+}
+
+// Image
+.video-card__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.2s ease;
+}
+
+// Overlay
+.video-card__overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+// Remove button
+.video-card__remove-button {
+  position: absolute;
+  top: $space-2;
+  right: $space-2;
+  background: rgba(0, 0, 0, 0.8);
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $text-primary;
+  cursor: pointer;
+  opacity: 0;
+  transition: all 0.2s ease;
+  z-index: 10;
+
+  &:hover {
+    background: rgba($color-error, 0.9);
+    transform: scale(1.1);
+  }
+
+  &:focus {
+    outline: 2px solid $color-accent;
+    outline-offset: 2px;
+    opacity: 1; // ensure visible when focused via keyboard
+  }
+}
+
+.video-card:hover .video-card__remove-button {
+  opacity: 1;
+}
+
+// Play button
+.video-card__play-button {
+  width: 48px;
+  height: 48px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $color-primary;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background: $text-primary;
+    transform: scale(1.1);
+  }
+  
+  svg {
+    width: 24px;
+    height: 24px;
+    margin-left: 2px; // Centrar el triángulo de play
+  }
+  
+  @media (max-width: $bp-md) {
+    width: 40px;
+    height: 40px;
+    
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+  }
+}
+
+// Info section
+.video-card__info {
+  padding: $space-3 0;
+}
+
+// Title
+.video-card__title {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $text-primary;
+  margin: 0 0 $space-1 0;
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  
+  @media (max-width: $bp-sm) {
+    font-size: 0.75rem;
+  }
+}
+
+// Duration
+.video-card__duration {
+  font-size: 0.75rem;
+  color: $text-secondary;
+  margin: 0;
+  
+  @media (max-width: $bp-sm) {
+    font-size: 0.625rem;
+  }
+}

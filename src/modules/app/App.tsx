@@ -15,7 +15,7 @@
  * <App />
  * ```
  */
-import React from 'react';
+import React, { useEffect } from 'react';
 import { LandingPage } from '@/modules/landing/components/LandingPage';
 import { SignupPage } from '@/modules/auth/components/SignupPage';
 import { LoginPage } from '@/modules/auth/components/LoginPage';
@@ -26,12 +26,18 @@ import { ProfilePage } from '@/modules/profile/components/ProfilePage';
 import { EditProfilePage } from '@/modules/profile/components/EditProfilePage';
 import { AboutUsPage } from '@/modules/about/components/AboutUsPage';
 import { SiteMapPage } from '@/modules/sitemap/components/SiteMapPage';
+import { MyListPage } from '@/modules/myList/components/MyListPage';
 import { ToastProvider } from '@/shared/components/ToastProvider';
 import { ProtectedRoute } from '@/lib/auth/ProtectedRoute';
 import { PublicRoute } from '@/lib/auth/PublicRoute';
-import { isAuthenticated } from '@/lib/auth/useAuth';
+import { initializeAuth } from '@/lib/auth/useAuth';
 
 export function App(): JSX.Element {
+  // Initialize authentication state from localStorage on app start
+  useEffect(() => {
+    initializeAuth();
+  }, []);
+
   // Simple routing based on current path
   const currentPath = window.location.pathname;
   
@@ -93,11 +99,11 @@ export function App(): JSX.Element {
         <ProfilePage />
       </ProtectedRoute>
     );
-  } else if (currentPath === '/movies' || currentPath === '/series' || currentPath === '/my-list') {
-    // Protected routes - require authentication
+  } else if (currentPath === '/my-list') {
+    // Protected route - my list page
     page = (
       <ProtectedRoute>
-        <div>{currentPath} page coming soon...</div>
+        <MyListPage />
       </ProtectedRoute>
     );
   } else if (currentPath === '/about') {
