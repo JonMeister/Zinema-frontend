@@ -16,6 +16,7 @@
  */
 import React from 'react';
 import styles from './Footer.module.scss';
+import { APP_VERSION } from '@/lib/version';
 
 export function Footer(): JSX.Element {
   return (
@@ -28,7 +29,7 @@ export function Footer(): JSX.Element {
       <div className={styles['footer__container']}>
         <div className={styles['footer__brand']} role="group" aria-label="Información de marca">
           <h3>Zinema</h3>
-          <p aria-label="Versión actual de la aplicación">Versión 1.0.0</p>
+          <p aria-label="Versión actual de la aplicación">Versión {APP_VERSION}</p>
         </div>
         
         <nav className={styles['footer__sitemap']} role="navigation" aria-label="Enlaces del pie de página">
