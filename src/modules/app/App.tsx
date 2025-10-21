@@ -26,6 +26,7 @@ import { ProfilePage } from '@/modules/profile/components/ProfilePage';
 import { EditProfilePage } from '@/modules/profile/components/EditProfilePage';
 import { AboutUsPage } from '@/modules/about/components/AboutUsPage';
 import { SiteMapPage } from '@/modules/sitemap/components/SiteMapPage';
+import { MyListPage } from '@/modules/myList/components/MyListPage';
 import { ToastProvider } from '@/shared/components/ToastProvider';
 import { ProtectedRoute } from '@/lib/auth/ProtectedRoute';
 import { PublicRoute } from '@/lib/auth/PublicRoute';
@@ -99,10 +100,10 @@ export function App(): JSX.Element {
       </ProtectedRoute>
     );
   } else if (currentPath === '/my-list') {
-    // Protected route - my list page (coming soon)
+    // Protected route - my list page
     page = (
       <ProtectedRoute>
-        <div>Mi Lista page coming soon...</div>
+        <MyListPage />
       </ProtectedRoute>
     );
   } else if (currentPath === '/about') {

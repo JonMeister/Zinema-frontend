@@ -5,6 +5,7 @@
  * Provides a centralized way to handle video operations and state.
  */
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 import { Video, VideosResponse, ApiError, VideoCategory, CategoriesResponse } from '@/lib/api/types';
 import { videoService } from '@/lib/api/videoService';
 import { useAuthStore } from './authStore';
@@ -19,6 +20,7 @@ interface VideosState {
   totalResults: number;
   hasMorePages: boolean;
   currentCategory: string;
+  lastFetchedAt: number | null;
   
   // Categories
   categories: VideoCategory[];
@@ -73,13 +75,16 @@ type VideosStore = VideosState & VideosActions;
  * - Loading and error states
  * - Automatic state management
  */
-export const useVideosStore = create<VideosStore>((set, get) => ({
+export const useVideosStore = create<VideosStore>()(
+  persist(
+    (set, get) => ({
   // Initial state
   videos: [],
   currentPage: 1,
   totalResults: 0,
   hasMorePages: true,
   currentCategory: 'all',
+  lastFetchedAt: null,
   categories: [],
   categoriesLoading: false,
   categoriesError: null,
@@ -134,6 +139,7 @@ export const useVideosStore = create<VideosStore>((set, get) => ({
         hasMorePages: response.videos.length > 0,
         loading: false,
         error: null,
+        lastFetchedAt: Date.now(),
       });
     } catch (err) {
       set({ 
@@ -269,7 +275,20 @@ export const useVideosStore = create<VideosStore>((set, get) => ({
   setSearchError: (searchError: string | null) => {
     set({ searchError });
   },
-}));
+    }),
+    {
+      name: 'videos-storage',
+      partialize: (state) => ({
+        videos: state.videos,
+        currentPage: state.currentPage,
+        totalResults: state.totalResults,
+        hasMorePages: state.hasMorePages,
+        currentCategory: state.currentCategory,
+        lastFetchedAt: state.lastFetchedAt,
+      }),
+    }
+  )
+);
 
 /**
  * Hook to get videos with automatic loading.
@@ -283,6 +302,7 @@ export const useVideos = () => {
     error, 
     currentCategory,
     hasMorePages,
+    lastFetchedAt,
     fetchVideosByCategory, 
     loadMoreVideos 
   } = useVideosStore();
@@ -293,6 +313,7 @@ export const useVideos = () => {
     error,
     currentCategory,
     hasMorePages,
+    lastFetchedAt,
     fetchVideosByCategory,
     loadMoreVideos,
   };
