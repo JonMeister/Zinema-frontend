@@ -18,7 +18,7 @@ import React, { useEffect, useState } from 'react';
 import { HeaderHome } from './HeaderHome';
 import { Footer } from '@/modules/shared/components/Footer';
 import { FeaturedHero } from '@/modules/shared/components/FeaturedHero';
-import { Carousel, SearchBar } from '@/modules/shared/components';
+import { Carousel, SearchBar, VideoOverlay, VideoPlayer } from '@/modules/shared/components';
 import { useVideos, useVideoSearch } from '@/lib/stores/videosStore';
 import styles from './HomePage.module.scss';
 
@@ -32,6 +32,9 @@ export function HomePage(): JSX.Element {
   const { videos, loading, error, fetchVideosByCategory, loadMoreVideos, hasMorePages } = useVideos();
   const { searchResults, searchLoading, searchError, searchVideos, clearSearch } = useVideoSearch();
   const [isSearchMode, setIsSearchMode] = useState(false);
+  const [selectedVideo, setSelectedVideo] = useState<any>(null);
+  const [isOverlayOpen, setIsOverlayOpen] = useState(false);
+  const [isPlayerOpen, setIsPlayerOpen] = useState(false);
 
   // Set page title for screen readers
   useEffect(() => {
@@ -67,8 +70,39 @@ export function HomePage(): JSX.Element {
   const natureVideos = videos.slice(10, 15);
 
   const handleVideoClick = (video: any) => {
-    console.log('Video clicked:', video);
-    // TODO: Implement video detail modal or navigation
+    setSelectedVideo(video);
+    setIsOverlayOpen(true);
+  };
+
+  const handleCloseOverlay = () => {
+    setIsOverlayOpen(false);
+    setSelectedVideo(null);
+  };
+
+  const handlePlay = (video: any) => {
+    console.log('HomePage: handlePlay called with video:', video);
+    setSelectedVideo(video);
+    setIsOverlayOpen(false); // Close overlay first
+    // Small delay to ensure smooth transition
+    setTimeout(() => {
+      console.log('HomePage: Opening video player');
+      setIsPlayerOpen(true);
+    }, 100);
+  };
+
+  const handleClosePlayer = () => {
+    setIsPlayerOpen(false);
+    setSelectedVideo(null);
+  };
+
+  const handleRate = (video: any, rating: number) => {
+    console.log('Rating video:', video, 'with rating:', rating);
+    // TODO: Implement rating functionality
+  };
+
+  const handleAddToFavorites = (video: any) => {
+    console.log('Adding to favorites:', video);
+    // TODO: Implement add to favorites functionality
   };
 
   const handleSearch = async (query: string) => {
@@ -172,6 +206,21 @@ export function HomePage(): JSX.Element {
           </div>
         )}
       </main>
+
+      <VideoOverlay
+        video={selectedVideo}
+        isOpen={isOverlayOpen}
+        onClose={handleCloseOverlay}
+        onPlay={handlePlay}
+        onRate={handleRate}
+        onAddToFavorites={handleAddToFavorites}
+      />
+
+      <VideoPlayer
+        video={selectedVideo}
+        isOpen={isPlayerOpen}
+        onClose={handleClosePlayer}
+      />
 
       <Footer />
     </div>
