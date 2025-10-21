@@ -1,5 +1,4 @@
-// Centralized application version for the frontend
-// Update this value to bump the displayed app version everywhere
-export const APP_VERSION = '1.1.0';
+// Centralized application version for the frontend. If Vite env var is present, use it; else fallback.
+export const APP_VERSION = (import.meta as any)?.env?.['VITE_APP_VERSION'] ?? '1.1.0';
 
 
