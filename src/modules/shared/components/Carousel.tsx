@@ -11,6 +11,8 @@ interface CarouselProps {
   onLoadMore?: () => void;
   hasMore?: boolean;
   className?: string;
+  showRemoveButton?: boolean;
+  onRemoveFromFavorites?: (video: Video) => void;
 }
 
 export function Carousel({
@@ -20,7 +22,9 @@ export function Carousel({
   onVideoClick,
   onLoadMore,
   hasMore = false,
-  className = ''
+  className = '',
+  showRemoveButton = false,
+  onRemoveFromFavorites
 }: CarouselProps): JSX.Element {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
@@ -56,11 +60,11 @@ export function Carousel({
   };
 
   const renderSkeletons = () => (
-    Array.from({ length: 5 }).map((_, index) => (
-      <div key={index} className="video-card-skeleton">
-        <div className="skeleton-image" />
-        <div className="skeleton-text" />
-        <div className="skeleton-text-small" />
+    Array.from({ length: 10 }).map((_, index) => (
+      <div key={index} className={styles['video-card-skeleton']}>
+        <div className={styles['skeleton-image']} />
+        <div className={styles['skeleton-text']} />
+        <div className={styles['skeleton-text-small']} />
       </div>
     ))
   );
@@ -114,13 +118,15 @@ export function Carousel({
           aria-label={`Lista de ${title}`}
           tabIndex={0}
         >
-          {loading ? renderSkeletons() : (
+          {(loading && videos.length === 0) ? renderSkeletons() : (
             <>
               {videos.map((video) => (
                 <VideoCard
                   key={video.id}
                   video={video}
                   onClick={handleVideoClick}
+                  showRemoveButton={showRemoveButton}
+                  onRemoveFromFavorites={onRemoveFromFavorites}
                 />
               ))}
               {renderLoadMoreButton()}

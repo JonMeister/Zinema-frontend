@@ -167,25 +167,24 @@ export const useIsAuthenticated = (): boolean => {
  * the Zustand store is synchronized with any existing authentication.
  */
 export const syncAuthFromStorage = (): void => {
-  const token = localStorage.getItem('authToken');
-  if (token && !isTokenExpired(token)) {
+  const token = localStorage.getItem('auth-storage');
+  if (token) {
     try {
-      // Parse token to get user info
-      const parts = token.split('.');
-      if (parts.length === 3 && parts[1]) {
-        const payload = JSON.parse(atob(parts[1]));
-        const user = {
-          id: payload.id || '',
-          email: payload.email || '',
-        };
-        
-        // Update Zustand store
-        useAuthStore.getState().login(token, user);
-        console.log('Auth store synchronized with existing token');
+      // Parse the stored Zustand state
+      const storedState = JSON.parse(token);
+      const authToken = storedState.state?.token;
+      
+      if (authToken && !isTokenExpired(authToken)) {
+        const user = storedState.state?.user;
+        if (user) {
+          // Update Zustand store
+          useAuthStore.getState().login(authToken, user);
+          console.log('Auth store synchronized with existing token');
+        }
       }
     } catch (error) {
       console.error('Failed to sync auth from storage:', error);
-      localStorage.removeItem('authToken');
+      localStorage.removeItem('auth-storage');
     }
   }
 };
