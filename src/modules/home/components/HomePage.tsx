@@ -1,12 +1,12 @@
 /**
  * Home page component for authenticated users.
  *
- * Displays a Netflix-style interface with featured movie hero section
+ * Displays a Zinema-style interface with featured movie hero section
  * and multiple movie carousels organized by categories.
  * Includes proper semantic HTML and ARIA attributes for accessibility.
  * 
  * @component
- * @returns {JSX.Element} The authenticated home page with Netflix-style layout
+ * @returns {JSX.Element} The authenticated home page with Zinema-style layout
  * 
  * @example
  * ```tsx
@@ -25,7 +25,7 @@ import styles from './HomePage.module.scss';
 
 /**
  * Renders the main home page for authenticated users.
- * Sets the page title and displays Netflix-style movie interface.
+ * Sets the page title and displays Zinema-style movie interface.
  * 
  * @returns {JSX.Element} Complete home page layout with movie carousels
  */

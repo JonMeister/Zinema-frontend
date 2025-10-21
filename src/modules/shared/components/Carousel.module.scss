@@ -51,7 +51,7 @@ $bp-sm: 640px;
   }
 }
 
-// Carousel wrapper - Netflix style
+// Carousel wrapper
 .carousel__wrapper {
   position: relative;
   display: flex;
@@ -65,7 +65,7 @@ $bp-sm: 640px;
   }
 }
 
-// Carousel container - Netflix style
+// Carousel container
 .carousel__container {
   display: flex;
   gap: $space-3;
@@ -91,7 +91,7 @@ $bp-sm: 640px;
   }
 }
 
-// Carousel arrows - Netflix style
+// Carousel arrows
 .carousel__arrow {
   position: absolute;
   top: 50%;
