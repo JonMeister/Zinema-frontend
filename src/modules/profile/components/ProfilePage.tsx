@@ -31,7 +31,7 @@ import styles from './ProfilePage.module.scss';
 import { HeaderHome } from '../../home/components/HeaderHome';
 import { Footer } from '../../shared/components/Footer';
 import { apiFetch } from '../../../lib/api/client';
-import { getAuthToken } from '../../../lib/auth/useAuth';
+import { useAuthToken, useAuthStore } from '../../../lib/stores/authStore';
 import { useToast } from '../../../shared/components/ToastProvider';
 
 export function ProfilePage(): JSX.Element {
@@ -42,6 +42,8 @@ export function ProfilePage(): JSX.Element {
   const [deleteConfirmation, setDeleteConfirmation] = useState('');
   const [deleting, setDeleting] = useState(false);
   const { showToast } = useToast();
+  const token = useAuthToken();
+  const { logout } = useAuthStore();
 
   // Set page title for screen readers
   useEffect(() => {
@@ -54,7 +56,6 @@ export function ProfilePage(): JSX.Element {
 
   const fetchProfile = async () => {
     try {
-      const token = getAuthToken();
       if (!token) {
         window.location.href = '/login';
         return;
@@ -95,7 +96,6 @@ export function ProfilePage(): JSX.Element {
     setDeleting(true);
 
     try {
-      const token = getAuthToken();
       if (!token) return;
 
       const response = await apiFetch('/api/users/deleteUser', {
@@ -107,7 +107,7 @@ export function ProfilePage(): JSX.Element {
 
       if (response.ok) {
         showToast('Cuenta eliminada exitosamente', 'success', 500);
-        localStorage.removeItem('authToken');
+        logout();
         setTimeout(() => {
           window.location.href = '/landing';
         }, 1500);

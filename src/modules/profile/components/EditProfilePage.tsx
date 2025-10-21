@@ -37,7 +37,7 @@ import styles from './EditProfilePage.module.scss';
 import { HeaderHome } from '../../home/components/HeaderHome';
 import { Footer } from '../../shared/components/Footer';
 import { apiFetch } from '../../../lib/api/client';
-import { getAuthToken } from '../../../lib/auth/useAuth';
+import { useAuthToken } from '../../../lib/stores/authStore';
 import { useToast } from '../../../shared/components/ToastProvider';
 
 export function EditProfilePage(): JSX.Element {
@@ -53,6 +53,7 @@ export function EditProfilePage(): JSX.Element {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { showToast } = useToast();
+  const token = useAuthToken();
 
   // Set page title for screen readers
   useEffect(() => {
@@ -65,7 +66,6 @@ export function EditProfilePage(): JSX.Element {
 
   const fetchProfile = async () => {
     try {
-      const token = getAuthToken();
       if (!token) {
         window.location.href = '/login';
         return;
@@ -144,7 +144,6 @@ export function EditProfilePage(): JSX.Element {
     }
 
     try {
-      const token = getAuthToken();
       if (!token) {
         window.location.href = '/login';
         return;
