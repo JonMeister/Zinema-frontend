@@ -11,7 +11,7 @@ import React from 'react';
 import styles from './SiteMapPage.module.scss';
 import { HeaderHome } from '../../home/components/HeaderHome';
 import { Footer } from '../../shared/components/Footer';
-import { isAuthenticated } from '../../../lib/auth/useAuth';
+import { useIsAuthenticated } from '../../../lib/stores/authStore';
 
 /**
  * Interface representing a site map link.
@@ -78,16 +78,6 @@ const siteMapCategories: SiteMapCategory[] = [
         description: 'Página principal para usuarios autenticados',
       },
       {
-        path: '/movies',
-        title: 'Películas',
-        description: 'Explora el catálogo de películas disponibles',
-      },
-      {
-        path: '/series',
-        title: 'Series',
-        description: 'Descubre series y programas de televisión',
-      },
-      {
         path: '/my-list',
         title: 'Mi Lista',
         description: 'Tus películas y series guardadas',
@@ -113,7 +103,7 @@ const siteMapCategories: SiteMapCategory[] = [
 ];
 
 export function SiteMapPage(): JSX.Element {
-  const authenticated = isAuthenticated();
+  const authenticated = useIsAuthenticated();
 
   // Set page title for screen readers
   React.useEffect(() => {

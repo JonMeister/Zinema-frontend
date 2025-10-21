@@ -1,0 +1,175 @@
+// Variables (usando las mismas del proyecto)
+$color-primary: #8b5cf6;
+$color-secondary: #a855f7;
+$color-accent: #c084fc;
+$color-surface: #1f1b24;
+$color-surface-hover: #2a2432;
+$color-border: #3a3441;
+$text-primary: #ffffff;
+$text-secondary: #a1a1aa;
+$space-1: 0.25rem;
+$space-2: 0.5rem;
+$space-3: 0.75rem;
+$space-4: 1rem;
+$space-6: 1.5rem;
+$space-8: 2rem;
+$radius-sm: 0.375rem;
+$radius-md: 0.5rem;
+$radius-lg: 0.75rem;
+$font-size-sm: 0.875rem;
+$font-size-base: 1rem;
+$font-size-lg: 1.125rem;
+$font-size-xl: 1.25rem;
+$font-size-2xl: 1.5rem;
+$font-weight-medium: 500;
+$font-weight-semibold: 600;
+$font-weight-bold: 700;
+$bp-lg: 1024px;
+$bp-md: 768px;
+$bp-sm: 640px;
+
+// Video card
+.video-card {
+  flex: 0 0 280px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  
+  &:hover {
+    transform: scale(1.05);
+    
+    .video-card__overlay {
+      opacity: 1;
+    }
+  }
+  
+  &:focus {
+    outline: 2px solid $color-accent;
+    outline-offset: 2px;
+    border-radius: $radius-md;
+  }
+  
+  @media (max-width: $bp-lg) {
+    flex: 0 0 240px;
+  }
+  
+  @media (max-width: $bp-md) {
+    flex: 0 0 200px;
+  }
+  
+  @media (max-width: $bp-sm) {
+    flex: 0 0 160px;
+  }
+}
+
+// Image container
+.video-card__image-container {
+  position: relative;
+  width: 100%;
+  height: 160px;
+  border-radius: $radius-md;
+  overflow: hidden;
+  background: $color-surface;
+  
+  @media (max-width: $bp-lg) {
+    height: 140px;
+  }
+  
+  @media (max-width: $bp-md) {
+    height: 120px;
+  }
+  
+  @media (max-width: $bp-sm) {
+    height: 100px;
+  }
+}
+
+// Image
+.video-card__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.2s ease;
+}
+
+// Overlay
+.video-card__overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+// Play button
+.video-card__play-button {
+  width: 48px;
+  height: 48px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $color-primary;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background: $text-primary;
+    transform: scale(1.1);
+  }
+  
+  svg {
+    width: 24px;
+    height: 24px;
+    margin-left: 2px; // Centrar el triángulo de play
+  }
+  
+  @media (max-width: $bp-md) {
+    width: 40px;
+    height: 40px;
+    
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+  }
+}
+
+// Info section
+.video-card__info {
+  padding: $space-3 0;
+}
+
+// Title
+.video-card__title {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $text-primary;
+  margin: 0 0 $space-1 0;
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  
+  @media (max-width: $bp-sm) {
+    font-size: 0.75rem;
+  }
+}
+
+// Duration
+.video-card__duration {
+  font-size: 0.75rem;
+  color: $text-secondary;
+  margin: 0;
+  
+  @media (max-width: $bp-sm) {
+    font-size: 0.625rem;
+  }
+}

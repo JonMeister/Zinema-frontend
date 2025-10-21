@@ -2,7 +2,7 @@
  * Props interface for ProtectedRoute component.
  */
 import React from 'react';
-import { isAuthenticated } from './useAuth';
+import { useIsAuthenticated } from '../stores/authStore';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -12,7 +12,7 @@ interface ProtectedRouteProps {
 /**
  * Protected route wrapper component for authenticated-only pages.
  *
- * Checks user authentication status and redirects unauthenticated users
+ * Checks user authentication status using Zustand store and redirects unauthenticated users
  * to the login page. Renders children components only for authenticated users.
  * 
  * @component
@@ -32,7 +32,9 @@ export function ProtectedRoute({
   children, 
   redirectTo = '/login' 
 }: ProtectedRouteProps): JSX.Element {
-  if (!isAuthenticated()) {
+  const isAuthenticated = useIsAuthenticated();
+  
+  if (!isAuthenticated) {
     window.location.href = redirectTo;
     return <div>Redirecting...</div>;
   }

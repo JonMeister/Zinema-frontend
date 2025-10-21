@@ -1,0 +1,254 @@
+@use '../../../styles/tokens' as *;
+@use '../../../styles/mixins' as *;
+
+.hero {
+  position: relative;
+  height: 80vh;
+  min-height: 500px;
+  max-height: 800px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  margin-bottom: $space-8;
+}
+
+.hero__background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 1;
+}
+
+.hero__overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(11, 11, 12, 0.8) 0%,
+    rgba(11, 11, 12, 0.4) 50%,
+    rgba(11, 11, 12, 0.1) 100%
+  );
+  z-index: 2;
+}
+
+.hero__content {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 $space-4;
+}
+
+.hero__info {
+  max-width: 600px;
+  padding: $space-6 0;
+}
+
+.hero__title {
+  font-family: 'Merriweather', Georgia, serif;
+  font-size: 3.5rem;
+  font-weight: 900;
+  line-height: 1.1;
+  margin: 0 0 $space-4 0;
+  color: $color-fg;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.hero__subtitle {
+  font-family: 'Merriweather', Georgia, serif;
+  font-size: 1.5rem;
+  font-weight: 300;
+  margin: 0 0 $space-6 0;
+  color: $text-ghost;
+  opacity: 0.9;
+}
+
+.hero__description {
+  font-size: 1.25rem;
+  font-weight: 400;
+  line-height: 1.4;
+  margin: 0 0 $space-6 0;
+  color: $text-secondary;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.hero__buttons {
+  display: flex;
+  gap: $space-4;
+  align-items: center;
+}
+
+.hero__button--primary {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  padding: $space-3 $space-6;
+  background: $color-fg;
+  color: $color-bg;
+  border: none;
+  border-radius: $radius-md;
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background: rgba(245, 246, 247, 0.9);
+    transform: translateY(-2px);
+  }
+  
+  &:active {
+    transform: translateY(0);
+  }
+  
+  svg {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+.hero__button--secondary {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  padding: $space-3 $space-6;
+  background: rgba(255, 255, 255, 0.2);
+  color: $color-fg;
+  border: none;
+  border-radius: $radius-md;
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(10px);
+  
+  &:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+  }
+  
+  &:active {
+    transform: translateY(0);
+  }
+  
+  svg {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+// Loading states
+.hero__loading {
+  max-width: 600px;
+  padding: $space-6 0;
+}
+
+.hero__skeleton {
+  width: 100%;
+  height: 60px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.1) 25%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.1) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+  border-radius: $radius-md;
+  margin-bottom: $space-4;
+}
+
+.hero__skeleton-text {
+  width: 80%;
+  height: 24px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.1) 25%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.1) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+  border-radius: $radius-sm;
+  margin-bottom: $space-3;
+}
+
+.hero__skeleton-text-small {
+  width: 60%;
+  height: 20px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.1) 25%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.1) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+  border-radius: $radius-sm;
+  margin-bottom: $space-6;
+}
+
+.hero__button-skeleton {
+  width: 120px;
+  height: 48px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.1) 25%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.1) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+  border-radius: $radius-md;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+// Fallback state
+.hero__fallback {
+  text-align: center;
+  padding: $space-8 0;
+}
+
+// Responsive design
+@media (max-width: $bp-lg) {
+  .hero {
+    height: 70vh;
+    min-height: 400px;
+  }
+  
+  .hero__title {
+    font-size: 2.5rem;
+  }
+  
+  .hero__description {
+    font-size: 1.125rem;
+  }
+}
+
+@media (max-width: $bp-md) {
+  .hero {
+    height: 60vh;
+    min-height: 350px;
+  }
+  
+  .hero__content {
+    padding: 0 $space-3;
+  }
+  
+  .hero__title {
+    font-size: 2rem;
+  }
+  
+  .hero__description {
+    font-size: 1rem;
+  }
+  
+  .hero__buttons {
+    flex-direction: column;
+    align-items: stretch;
+    gap: $space-3;
+  }
+  
+  .hero__button--primary,
+  .hero__button--secondary {
+    justify-content: center;
+    padding: $space-4 $space-6;
+  }
+}

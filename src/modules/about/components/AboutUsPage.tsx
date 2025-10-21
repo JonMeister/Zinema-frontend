@@ -11,7 +11,7 @@ import React from 'react';
 import styles from './AboutUsPage.module.scss';
 import { HeaderHome } from '../../home/components/HeaderHome';
 import { Footer } from '../../shared/components/Footer';
-import { isAuthenticated } from '../../../lib/auth/useAuth';
+import { useIsAuthenticated } from '../../../lib/stores/authStore';
 
 /**
  * Interface representing a team member.
@@ -29,7 +29,7 @@ const teamMembers: TeamMember[] = [
 ];
 
 export function AboutUsPage(): JSX.Element {
-  const authenticated = isAuthenticated();
+  const authenticated = useIsAuthenticated();
 
   // Set page title for screen readers
   React.useEffect(() => {
