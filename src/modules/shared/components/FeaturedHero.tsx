@@ -19,9 +19,11 @@ import styles from './FeaturedHero.module.scss';
 interface FeaturedHeroProps {
   video: Video | null;
   loading?: boolean;
+  onPlay?: (video: Video) => void;
+  onMoreInfo?: (video: Video) => void;
 }
 
-export function FeaturedHero({ video, loading }: FeaturedHeroProps): JSX.Element {
+export function FeaturedHero({ video, loading, onPlay, onMoreInfo }: FeaturedHeroProps): JSX.Element {
   // Helper function to create better titles from Pexels data
   const getVideoTitle = (video: Video): string => {
     // Try to create a title from tags, capitalizing and formatting
@@ -72,13 +74,15 @@ export function FeaturedHero({ video, loading }: FeaturedHeroProps): JSX.Element
   }
 
   const handlePlay = () => {
-    // TODO: Implement play functionality
-    console.log('Playing video:', video.id);
+    if (video && onPlay) {
+      onPlay(video);
+    }
   };
 
   const handleMoreInfo = () => {
-    // TODO: Implement more info functionality
-    console.log('More info for video:', video.id);
+    if (video && onMoreInfo) {
+      onMoreInfo(video);
+    }
   };
 
   return (

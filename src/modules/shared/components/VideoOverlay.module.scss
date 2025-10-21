@@ -228,12 +228,40 @@ $bp-sm: 640px;
   background: transparent;
   color: $text-primary;
   border: 2px solid $color-border;
+  padding: $space-2 $space-3; // compact size for favorite button
+  font-size: $font-size-sm;
 
   &:hover {
     background: $color-surface-hover;
     border-color: $color-accent;
     color: $color-accent;
   }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.overlay__button--active {
+  background: $color-accent !important;
+  border-color: $color-accent !important;
+  color: $text-primary !important;
+
+  svg {
+    fill: currentColor;
+  }
+
+  &:hover {
+    background: $color-primary !important;
+    border-color: $color-primary !important;
+  }
+}
+
+// Ensure small icon for favorite button
+.overlay__button--secondary svg {
+  width: 16px;
+  height: 16px;
 }
 
 // Rating section

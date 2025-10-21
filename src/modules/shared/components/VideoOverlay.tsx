@@ -4,9 +4,10 @@
  * Shows a modal overlay with play, rate, and add to favorites options
  * when a video card is clicked.
  */
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './VideoOverlay.module.scss';
 import { Video } from '@/lib/api/types';
+import { useFavorites } from '@/lib/stores/favoritesStore';
 
 interface VideoOverlayProps {
   video: Video | null;
@@ -14,7 +15,6 @@ interface VideoOverlayProps {
   onClose: () => void;
   onPlay?: (video: Video) => void;
   onRate?: (video: Video, rating: number) => void;
-  onAddToFavorites?: (video: Video) => void;
 }
 
 export function VideoOverlay({
@@ -22,9 +22,11 @@ export function VideoOverlay({
   isOpen,
   onClose,
   onPlay,
-  onRate,
-  onAddToFavorites
+  onRate
 }: VideoOverlayProps): JSX.Element {
+  const { addFavorite, removeFavorite, checkFavorite } = useFavorites();
+  const [isAddingFavorite, setIsAddingFavorite] = useState(false);
+  const isFavorite = video ? checkFavorite(String(video.id)) : false;
   // Close overlay on Escape key
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
@@ -76,11 +78,21 @@ export function VideoOverlay({
     }
   };
 
-  const handleAddToFavorites = () => {
-    if (onAddToFavorites) {
-      onAddToFavorites(video);
+  const handleToggleFavorite = async () => {
+    if (!video) return;
+    
+    setIsAddingFavorite(true);
+    try {
+      if (isFavorite) {
+        await removeFavorite(String(video.id));
+      } else {
+        await addFavorite(String(video.id));
+      }
+    } catch (error) {
+      console.error('Error toggling favorite:', error);
+    } finally {
+      setIsAddingFavorite(false);
     }
-    onClose();
   };
 
   const handleBackdropClick = (event: React.MouseEvent) => {
@@ -155,14 +167,15 @@ export function VideoOverlay({
           </button>
 
           <button
-            className={styles['overlay__button--secondary']}
-            onClick={handleAddToFavorites}
-            aria-label={`Agregar ${getVideoTitle(video)} a favoritos`}
+            className={`${styles['overlay__button--secondary']} ${isFavorite ? styles['overlay__button--active'] : ''}`}
+            onClick={handleToggleFavorite}
+            disabled={isAddingFavorite}
+            aria-label={isFavorite ? `Eliminar ${getVideoTitle(video)} de favoritos` : `Agregar ${getVideoTitle(video)} a favoritos`}
           >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill={isFavorite ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2">
               <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
             </svg>
-            Agregar a Favoritos
+            {isAddingFavorite ? 'Procesando...' : (isFavorite ? 'En Mi Lista' : 'Agregar a Mi Lista')}
           </button>
 
           <div className={styles['overlay__rating']}>

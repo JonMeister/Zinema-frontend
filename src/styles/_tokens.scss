@@ -89,8 +89,12 @@ $color-primary: $color-accent;
 $color-primary-dark: color.scale($color-accent, $lightness: -10%);
 $color-primary-light: rgba($color-accent, 0.15);
 $color-border: $border-subtle;
+$color-error: #ef4444;
+$color-error-light: rgba(239, 68, 68, 0.1);
+$color-error-border: rgba(239, 68, 68, 0.3);
 
 // Breakpoints
+$bp-sm: 480px;
 $bp-md: 768px;
 $bp-lg: 1024px;
 

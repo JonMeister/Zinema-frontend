@@ -175,6 +175,7 @@
   gap: $space-3;
   padding-top: $space-4;
   border-top: 1px solid $border-subtle;
+  justify-content: center;
 }
 
 .btn-primary {
@@ -188,6 +189,11 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
+  width: 200px;
+  justify-content: center;
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
 
   &:hover:not(:disabled) {
     background: color.scale($color-button-accent, $lightness: 5%);
@@ -220,6 +226,9 @@
   transition: all 0.2s ease;
   display: inline-flex;
   align-items: center;
+  width: 200px;
+  justify-content: center;
+  white-space: nowrap;
 
   &:hover {
     border-color: $text-ghost;

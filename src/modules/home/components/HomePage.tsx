@@ -20,6 +20,7 @@ import { Footer } from '@/modules/shared/components/Footer';
 import { FeaturedHero } from '@/modules/shared/components/FeaturedHero';
 import { Carousel, SearchBar, VideoOverlay, VideoPlayer } from '@/modules/shared/components';
 import { useVideos, useVideoSearch } from '@/lib/stores/videosStore';
+import { useFavorites } from '@/lib/stores/favoritesStore';
 import styles from './HomePage.module.scss';
 
 /**
@@ -29,8 +30,9 @@ import styles from './HomePage.module.scss';
  * @returns {JSX.Element} Complete home page layout with movie carousels
  */
 export function HomePage(): JSX.Element {
-  const { videos, loading, error, fetchVideosByCategory, loadMoreVideos, hasMorePages } = useVideos();
+  const { videos, loading, error, fetchVideosByCategory, loadMoreVideos, hasMorePages, lastFetchedAt } = useVideos();
   const { searchResults, searchLoading, searchError, searchVideos, clearSearch } = useVideoSearch();
+  const { fetchFavorites } = useFavorites();
   const [isSearchMode, setIsSearchMode] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState<any>(null);
   const [isOverlayOpen, setIsOverlayOpen] = useState(false);
@@ -41,11 +43,14 @@ export function HomePage(): JSX.Element {
     document.title = 'Inicio - Zinema';
   }, []);
 
-  // Load initial data - Featured videos from Pexels
+  // Load initial data - only fetch if not already cached
   useEffect(() => {
-    // Load featured videos from Pexels curated collections
-    fetchVideosByCategory('featured', 1);
-  }, [fetchVideosByCategory]);
+    const hasCached = Array.isArray(videos) && videos.length > 0;
+    if (!hasCached) {
+      fetchVideosByCategory('featured', 1);
+    }
+    fetchFavorites();
+  }, [fetchVideosByCategory, fetchFavorites]);
 
   // Helper function to shuffle array
   const shuffleArray = (array: any[]) => {
@@ -57,17 +62,17 @@ export function HomePage(): JSX.Element {
     return shuffled;
   };
 
-  // Group videos by categories for different carousels (reduced to 3 sections)
+  // Group videos by categories for different carousels (10 por sección)
   const shuffledVideos = shuffleArray(videos); // Mezclar todos los videos
-  const popularVideos = shuffledVideos.slice(0, 5); // Primeros 5 videos
+  const popularVideos = shuffledVideos.slice(0, 10); // Primeros 10 videos
   
   // Get featured video (first video from the list)
   const featuredVideo = videos.length > 0 ? videos[0] : null;
   
-  // Videos aleatorios para diferentes categorías (5 videos cada uno)
-  const actionVideos = videos.slice(0, 5);
-  const comedyVideos = videos.slice(5, 10);
-  const natureVideos = videos.slice(10, 15);
+  // Videos aleatorios para diferentes categorías (10 videos cada uno)
+  const actionVideos = videos.slice(0, 10);
+  const comedyVideos = videos.slice(10, 20);
+  const natureVideos = videos.slice(20, 30);
 
   const handleVideoClick = (video: any) => {
     setSelectedVideo(video);
@@ -100,11 +105,6 @@ export function HomePage(): JSX.Element {
     // TODO: Implement rating functionality
   };
 
-  const handleAddToFavorites = (video: any) => {
-    console.log('Adding to favorites:', video);
-    // TODO: Implement add to favorites functionality
-  };
-
   const handleSearch = async (query: string) => {
     if (query.trim()) {
       setIsSearchMode(true);
@@ -126,6 +126,8 @@ export function HomePage(): JSX.Element {
         <FeaturedHero 
           video={featuredVideo || null} 
           loading={loading && videos.length === 0}
+          onPlay={handlePlay}
+          onMoreInfo={handleVideoClick}
         />
 
         {/* Search Bar */}
@@ -213,7 +215,6 @@ export function HomePage(): JSX.Element {
         onClose={handleCloseOverlay}
         onPlay={handlePlay}
         onRate={handleRate}
-        onAddToFavorites={handleAddToFavorites}
       />
 
       <VideoPlayer
