@@ -3,51 +3,105 @@
 
 .page {
   min-height: 100vh;
-  background: radial-gradient(120% 100% at 0% 0%, #{$grad-1} 0%, #{$grad-2} 45%, #{$grad-3} 100%);
+  background: $color-bg;
   color: $color-fg;
   display: flex;
   flex-direction: column;
+  overflow-x: hidden; // Prevenir scroll horizontal
+  width: 100%;
+  max-width: 100vw;
 }
 
 .main {
   flex: 1;
-  @include container(1400px);
-  padding: var(--space-4);
+  padding: 0;
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
 }
 
-.hero {
-  padding: 3rem 0;
+// Search section
+.search-section {
+  padding: $space-8 $space-4;
+  background: $color-bg;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+// Search results
+.search-results {
+  padding: 0;
+  background: $color-bg;
+}
+
+// No results state
+.no-results {
+  padding: $space-8 $space-4;
   text-align: center;
-
-  &__title {
-    font-family: 'Merriweather', Georgia, serif;
-    font-size: 3rem;
-    font-weight: 900;
-    margin: 0 0 var(--space-3) 0;
-    color: $color-logo-text;
+  background: $color-bg;
+  
+  h2 {
+    color: $color-fg;
+    font-size: $font-size-2xl;
+    font-weight: $font-weight-semibold;
+    margin: 0 0 $space-4 0;
   }
-
-  &__subtitle {
-    font-family: 'Merriweather', Georgia, serif;
-    font-size: 1.25rem;
-    font-weight: 300;
-    margin: 0;
-    color: $text-ghost;
-    opacity: 0.8;
+  
+  p {
+    color: $text-secondary;
+    font-size: $font-size-lg;
+    margin: 0 0 $space-6 0;
   }
 }
 
+// Back button
+.back-button {
+  background: $color-primary;
+  color: $color-fg;
+  border: none;
+  border-radius: $radius-md;
+  padding: $space-3 $space-6;
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background: $color-primary-dark;
+    transform: translateY(-1px);
+  }
+  
+  &:focus {
+    outline: 2px solid $color-accent;
+    outline-offset: 2px;
+  }
+}
+
+.carousels {
+  padding: 0;
+  background: $color-bg;
+}
+
+.error {
+  padding: $space-6 $space-4;
+  text-align: center;
+  background: rgba(255, 0, 0, 0.1);
+  border: 1px solid rgba(255, 0, 0, 0.3);
+  border-radius: $radius-md;
+  margin: $space-4;
+  
+  p {
+    margin: 0;
+    color: #ff6b6b;
+    font-weight: $font-weight-medium;
+  }
+}
+
+// Responsive adjustments
 @media (max-width: $bp-md) {
-  .hero {
-    padding: 2rem 0;
-
-    &__title {
-      font-size: 2rem;
-    }
-
-    &__subtitle {
-      font-size: 1rem;
-    }
+  .carousels {
+    padding-bottom: $space-6;
   }
 }
 

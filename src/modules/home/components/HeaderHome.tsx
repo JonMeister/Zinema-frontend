@@ -15,12 +15,14 @@
  * ```
  */
 import React, { useState, useRef, useEffect } from 'react';
-import { isAuthenticated } from '../../../lib/auth/useAuth';
+import { useIsAuthenticated, useAuthStore } from '../../../lib/stores/authStore';
 import styles from './HeaderHome.module.scss';
 
 export function HeaderHome(): JSX.Element {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const isAuthenticated = useIsAuthenticated();
+  const { logout } = useAuthStore();
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -34,7 +36,7 @@ export function HeaderHome(): JSX.Element {
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem('authToken');
+    logout();
     window.location.href = '/landing';
   };
 
@@ -52,7 +54,7 @@ export function HeaderHome(): JSX.Element {
       
       <div className={styles['header__bar']}>
         <div className={styles['header__logo']} aria-label="Zinema">
-          <a href={isAuthenticated() ? '/home' : '/landing'} aria-label="Ir al inicio">
+          <a href={isAuthenticated ? '/home' : '/landing'} aria-label="Ir al inicio">
             <img 
               src="/images/logos/zinemalogo.png" 
               alt="Zinema" 
@@ -64,8 +66,6 @@ export function HeaderHome(): JSX.Element {
         
         <nav className={styles['header__nav']} aria-label="Navegación principal" role="navigation">
           <a href="/home" className={styles['header__link']} aria-label="Ir a página de inicio" aria-current="page">Inicio</a>
-          <a href="/movies" className={styles['header__link']} aria-label="Ir a catálogo de películas">Películas</a>
-          <a href="/series" className={styles['header__link']} aria-label="Ir a catálogo de series">Series</a>
           <a href="/my-list" className={styles['header__link']} aria-label="Ir a mi lista de favoritos">Mi Lista</a>
         </nav>
 
