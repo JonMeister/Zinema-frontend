@@ -53,7 +53,7 @@
 
   &__nav {
     display: flex;
-    gap: $space-4;
+    gap: $space-6;
     align-items: center;
     flex: 1;
     margin-left: $space-6; // extra spacing from logo
@@ -64,7 +64,7 @@
     text-decoration: none;
     font-family: 'Merriweather', Georgia, serif;
     font-weight: 400;
-    font-size: 1rem;
+    font-size: 1.25rem;
     transition: color 0.2s ease;
     position: relative;
 
@@ -105,6 +105,12 @@
     &:focus-visible {
       outline: 2px solid $color-accent;
       outline-offset: 2px;
+    }
+
+    // Hacer el icono de usuario más grande
+    svg {
+      width: 32px; // Aumentado de 24px a 32px
+      height: 32px; // Aumentado de 24px a 32px
     }
   }
 
@@ -163,15 +169,21 @@
     }
 
     &__nav {
-      gap: $space-2;
+      gap: $space-3;
     }
 
     &__link {
-      font-size: 1rem;
+      font-size: 1.25rem;
     }
 
     &__logo img {
       height: 2rem;
+    }
+
+    // Icono de usuario más pequeño en tablets
+    &__btn svg {
+      width: 28px;
+      height: 28px;
     }
   }
 }
@@ -184,15 +196,22 @@
     }
 
     &__nav {
-      gap: $space-1;
+      gap: $space-3;
     }
 
     &__link {
-      font-size: 1rem;
+      font-size: 1.25rem;
     }
 
     &__logo img {
-      height: 1rem;
+      margin-top: $space-1;
+      height: 1.5rem;
+    }
+
+    // Icono de usuario más pequeño en móviles
+    &__btn svg {
+      width: 24px;
+      height: 24px;
     }
 
     &__dropdown {

@@ -159,7 +159,7 @@
 
 // Title
 .video-card__title {
-  font-size: $font-size-sm;
+  font-size: $font-size-xl;
   font-weight: $font-weight-medium;
   color: $text-primary;
   margin: 0 0 $space-1 0;
@@ -171,17 +171,8 @@
   text-overflow: ellipsis;
   
   @media (max-width: $bp-sm) {
-    font-size: 0.75rem;
+    font-size: $font-size-lg;
   }
 }
 
-// Duration
-.video-card__duration {
-  font-size: 0.75rem;
-  color: $text-secondary;
-  margin: 0;
-  
-  @media (max-width: $bp-sm) {
-    font-size: 0.625rem;
-  }
-}
+

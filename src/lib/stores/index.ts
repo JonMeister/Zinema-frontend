@@ -13,10 +13,13 @@ export {
   syncAuthFromStorage,
 } from './authStore';
 
-// Videos store exports
+// Movies store exports
 export {
-  useVideosStore,
-  useVideos,
-  useVideoCategories,
-  useVideoSearch,
-} from './videosStore';
+  useMoviesStore,
+  useMovies,
+} from './moviesStore';
+
+// Favorites store exports
+export {
+  useFavorites,
+} from './favoritesStore';

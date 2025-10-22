@@ -99,9 +99,6 @@ export function VideoCard({
         <h3 className={styles['video-card__title']}>
           {getVideoTitle(video)}
         </h3>
-        <p className={styles['video-card__duration']}>
-          {Math.floor(video.duration / 60)} min
-        </p>
       </div>
     </div>
   );

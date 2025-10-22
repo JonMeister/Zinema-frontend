@@ -104,6 +104,16 @@ export function MyListPage(): JSX.Element {
               showRemoveButton={true}
               onRemoveFromFavorites={handleRemoveFromFavorites}
             />
+            
+            {/* Back to Home Button */}
+            <div className={styles['back-section']}>
+              <a href="/home" className={styles['back-button']}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                Volver al Inicio
+              </a>
+            </div>
           </div>
         ) : (
           <div className={styles['empty-state']}>
