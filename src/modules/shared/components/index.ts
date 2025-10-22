@@ -3,7 +3,7 @@ export { Button } from './Button';
 export { Footer } from './Footer';
 export { VisuallyHidden } from './VisuallyHidden';
 
-// Netflix-style components
+// Shared UI components
 export { FeaturedHero } from './FeaturedHero';
 export { Carousel } from './Carousel';
 export { VideoCard } from './VideoCard';

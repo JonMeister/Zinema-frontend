@@ -39,19 +39,19 @@ $bp-sm: 640px;
 
 // Carousel title
 .carousel__title {
-  font-size: $font-size-xl;
+  font-size: $font-size-2xl;
   font-weight: $font-weight-semibold;
   color: $text-primary;
   margin: 0 0 $space-4 0;
   padding: 0 $space-4;
   
   @media (max-width: $bp-md) {
-    font-size: $font-size-lg;
+    font-size: $font-size-xl;
     padding: 0 $space-2;
   }
 }
 
-// Carousel wrapper - Netflix style
+// Carousel wrapper
 .carousel__wrapper {
   position: relative;
   display: flex;
@@ -65,7 +65,7 @@ $bp-sm: 640px;
   }
 }
 
-// Carousel container - Netflix style
+// Carousel container
 .carousel__container {
   display: flex;
   gap: $space-3;
@@ -91,7 +91,7 @@ $bp-sm: 640px;
   }
 }
 
-// Carousel arrows - Netflix style
+// Carousel arrows
 .carousel__arrow {
   position: absolute;
   top: 50%;
