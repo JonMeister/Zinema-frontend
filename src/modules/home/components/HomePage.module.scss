@@ -7,7 +7,7 @@
   color: $color-fg;
   display: flex;
   flex-direction: column;
-  overflow-x: hidden; // Prevenir scroll horizontal
+  overflow-x: hidden;
   width: 100%;
   max-width: 100vw;
 }
@@ -20,67 +20,16 @@
   overflow-x: hidden;
 }
 
-// Search section
-.search-section {
-  padding: $space-8 $space-4;
+// Content with Netflix-style overlap
+.content {
+  margin-top: -4rem; // Creates overlap with hero section
   background: $color-bg;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-// Search results
-.search-results {
-  padding: 0;
-  background: $color-bg;
-}
-
-// No results state
-.no-results {
-  padding: $space-8 $space-4;
-  text-align: center;
-  background: $color-bg;
+  position: relative;
+  z-index: 1;
   
-  h2 {
-    color: $color-fg;
-    font-size: $font-size-2xl;
-    font-weight: $font-weight-semibold;
-    margin: 0 0 $space-4 0;
+  @media (max-width: $bp-md) {
+    margin-top: -2rem; // Smaller overlap on mobile
   }
-  
-  p {
-    color: $text-secondary;
-    font-size: $font-size-lg;
-    margin: 0 0 $space-6 0;
-  }
-}
-
-// Back button
-.back-button {
-  background: $color-primary;
-  color: $color-fg;
-  border: none;
-  border-radius: $radius-md;
-  padding: $space-3 $space-6;
-  font-size: $font-size-md;
-  font-weight: $font-weight-semibold;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  
-  &:hover {
-    background: $color-primary-dark;
-    transform: translateY(-1px);
-  }
-  
-  &:focus {
-    outline: 2px solid $color-accent;
-    outline-offset: 2px;
-  }
-}
-
-.carousels {
-  padding: 0;
-  background: $color-bg;
 }
 
 .error {
@@ -95,13 +44,6 @@
     margin: 0;
     color: #ff6b6b;
     font-weight: $font-weight-medium;
-  }
-}
-
-// Responsive adjustments
-@media (max-width: $bp-md) {
-  .carousels {
-    padding-bottom: $space-6;
   }
 }
 
