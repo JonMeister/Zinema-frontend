@@ -78,34 +78,27 @@ export const useMoviesStore = create<MoviesStore>()(
         set({ loading: true, error: null });
 
     try {
-      console.log('Calling videoService.getVideos...');
-      // Fetch 2 pages to get 20 movies total
-      const response1 = await videoService.getVideos(1, token);
-      const response2 = await videoService.getVideos(2, token);
-      
-      console.log('Response 1 received:', response1);
-      console.log('Response 2 received:', response2);
-      
-      // Combine videos from both pages
-      const allVideos = [
-        ...('videos' in response1 ? response1.videos : []),
-        ...('videos' in response2 ? response2.videos : [])
+      // List of specific video IDs to fetch
+      const videoIds = [
+        6963395, 5386411, 7438482, 1526909, 1409899, 
+        3163534, 2169880, 857251, 856973, 2098989,
+        1093662, 857195, 5329239, 1580455, 4057252,
+        3363552, 2480792, 6560039, 5322475, 1757800
       ];
-      
-      console.log('Combined videos count:', allVideos.length);
 
-      // Check for errors in either response
-      if ('message' in response1 || 'message' in response2) {
-        const errorMessage = ('message' in response1) ? response1.message : ('message' in response2) ? response2.message : 'Error desconocido';
-        console.log('Error response:', errorMessage);
-        set({ 
-          loading: false, 
-          error: errorMessage 
-        });
-        return;
-      }
+      console.log('Fetching videos by specific IDs');
       
-      console.log('Success! Total videos count:', allVideos.length);
+      // Fetch videos by their specific IDs
+      const videoPromises = videoIds.map(id => videoService.getVideoById(id, token));
+      const responses = await Promise.all(videoPromises);
+      
+      // Filter out errors and extract valid videos
+      const allVideos = responses
+        .filter(response => response && !('message' in response))
+        .map(response => response as Video);
+      
+      console.log('Successfully fetched videos count:', allVideos.length);
+      
       // Set movies and featured movie (first one)
       set({
         movies: allVideos,
