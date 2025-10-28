@@ -69,8 +69,10 @@ export const useRatingsStore = create<RatingsStore>((set, get) => ({
     try {
       const response = await ratingService.createRating(videoId, stars, token);
 
-      if ('message' in response && !response.rating) {
-        set({ loading: false, error: response.message });
+      // Expect a RatingResponse with a rating. If not present, treat as error
+      if (!('rating' in response)) {
+        const msg = 'message' in response ? response.message : 'Respuesta inválida al crear calificación';
+        set({ loading: false, error: msg });
         return false;
       }
 
@@ -98,8 +100,10 @@ export const useRatingsStore = create<RatingsStore>((set, get) => ({
     try {
       const response = await ratingService.updateRating(ratingId, stars, token);
 
-      if ('message' in response && !response.rating) {
-        set({ loading: false, error: response.message });
+      // Expect a RatingResponse with a rating. If not present, treat as error
+      if (!('rating' in response)) {
+        const msg = 'message' in response ? response.message : 'Respuesta inválida al actualizar calificación';
+        set({ loading: false, error: msg });
         return false;
       }
 

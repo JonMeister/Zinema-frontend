@@ -70,8 +70,10 @@ export const useCommentsStore = create<CommentsStore>()(
         try {
           const response = await commentService.createComment(videoId, content, token);
           
-          if ('message' in response && !response.comment) {
-            set({ loading: false, error: response.message });
+          // Expect a CommentResponse with a comment. Otherwise treat as error
+          if (!('comment' in response)) {
+            const msg = 'message' in response ? response.message : 'Respuesta inválida al crear comentario';
+            set({ loading: false, error: msg });
             return;
           }
 
@@ -97,8 +99,10 @@ export const useCommentsStore = create<CommentsStore>()(
         try {
           const response = await commentService.updateComment(commentId, content, token);
           
-          if ('message' in response && !response.comment) {
-            set({ loading: false, error: response.message });
+          // Expect a CommentResponse with a comment. Otherwise treat as error
+          if (!('comment' in response)) {
+            const msg = 'message' in response ? response.message : 'Respuesta inválida al actualizar comentario';
+            set({ loading: false, error: msg });
             return;
           }
 
