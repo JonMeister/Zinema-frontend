@@ -127,14 +127,14 @@ export function HomePage(): JSX.Element {
         )}
 
         {/* Search Bar */}
-        <div className={styles['search-section']}>
+        <section className={styles['search-section']} aria-label="Búsqueda de contenido. Presiona Control más K para acceder rápidamente">
           <SearchBar 
             onSearch={handleSearch}
             onEmpty={handleSearchEmpty}
             loading={isLoading && isSearching}
             placeholder="Buscar películas..."
           />
-        </div>
+        </section>
 
         {/* Content with overlap */}
         <div className={`${styles['content']} ${isSearching ? styles['content--no-overlap'] : ''}`}>
@@ -154,7 +154,7 @@ export function HomePage(): JSX.Element {
                 onVideoClick={handleVideoClick}
               />
               {displayVideos.length === 0 && !isLoading && (
-                <div className={styles['no-results']}>
+                <div className={styles['no-results']} role="status" aria-live="polite">
                   <p>No se encontraron resultados para tu búsqueda.</p>
                 </div>
               )}
