@@ -141,3 +141,47 @@ export interface RatingStats {
   count: number;
   average: number;
 }
+
+/**
+ * Comment information
+ */
+export interface Comment {
+  id: string;
+  userId: string;
+  username?: string;
+  videoId: string;
+  content: string;
+  rating?: number | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+/**
+ * Response from comment endpoints
+ */
+export interface CommentResponse {
+  message: string;
+  comment?: {
+    id: string;
+    videoId: string;
+    content?: string;
+    createdAt?: string;
+    updatedAt?: string;
+  };
+}
+
+/**
+ * Response from get comments endpoint
+ */
+export interface CommentsResponse {
+  comments: Comment[];
+  count: number;
+}
+
+/**
+ * Response from check comment endpoint
+ */
+export interface CheckCommentResponse {
+  isComment: boolean;
+  comment?: Comment;
+}

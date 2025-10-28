@@ -9,6 +9,8 @@ import styles from './VideoOverlay.module.scss';
 import { Video } from '@/lib/api/types';
 import { useFavorites } from '@/lib/stores/favoritesStore';
 import { useRatings } from '@/lib/stores/ratingsStore';
+import { useComments } from '@/lib/stores/commentsStore';
+import { useAuthStore } from '@/lib/stores/authStore';
 
 interface VideoOverlayProps {
   video: Video | null;
@@ -27,24 +29,48 @@ export function VideoOverlay({
 }: VideoOverlayProps): JSX.Element {
   const { addFavorite, removeFavorite, checkFavorite } = useFavorites();
   const { userRating, videoStats, createRating, updateRating, deleteRating, getUserRating, getVideoRatings } = useRatings();
+  const { userComment, videoComments, createComment, updateComment, deleteComment, getUserComment, getVideoComments } = useComments();
+  const { user } = useAuthStore();
   const [isAddingFavorite, setIsAddingFavorite] = useState(false);
   const [isRating, setIsRating] = useState(false);
   const [hoveredStar, setHoveredStar] = useState(0);
   const [isEditingRating, setIsEditingRating] = useState(false);
+  const [isCommenting, setIsCommenting] = useState(false);
+  const [isEditingComment, setIsEditingComment] = useState(false);
+  const [commentText, setCommentText] = useState('');
   const overlayRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   
   const isFavorite = video ? checkFavorite(String(video.id)) : false;
   const currentUserRating = video ? userRating[String(video.id)] : null;
   const stats = video ? videoStats[String(video.id)] : null;
+  const currentUserComment = video ? userComment[String(video.id)] : null;
+  const comments = video ? (videoComments[String(video.id)] || []) : [];
   
-  // Load ratings when overlay opens.
+  /**
+   * Load ratings and comments when overlay opens.
+   * Fetches user's rating, video statistics, user's comment, and all comments for the video.
+   */
   useEffect(() => {
     if (isOpen && video) {
       getUserRating(String(video.id));
       getVideoRatings(String(video.id));
+      getUserComment(String(video.id));
+      getVideoComments(String(video.id));
     }
-  }, [isOpen, video, getUserRating, getVideoRatings]);
+  }, [isOpen, video, getUserRating, getVideoRatings, getUserComment, getVideoComments]);
+
+  /**
+   * Populate comment text field when entering edit mode.
+   * Clears the field when exiting edit mode.
+   */
+  useEffect(() => {
+    if (isEditingComment && currentUserComment) {
+      setCommentText(currentUserComment.content);
+    } else if (!isEditingComment) {
+      setCommentText('');
+    }
+  }, [isEditingComment, currentUserComment]);
 
   // Focus management and keyboard trap
   useEffect(() => {
@@ -194,6 +220,73 @@ export function VideoOverlay({
     } finally {
       setIsAddingFavorite(false);
     }
+  };
+
+  /**
+   * Handles comment submission (create or update).
+   * Validates comment length (5-100 characters) before submitting.
+   * Updates existing comment if in edit mode, otherwise creates new comment.
+   */
+  const handleCommentSubmit = async () => {
+    if (!video || !commentText.trim()) return;
+    
+    if (commentText.trim().length < 5) {
+      alert('El comentario debe tener al menos 5 caracteres');
+      return;
+    }
+    
+    if (commentText.trim().length > 100) {
+      alert('El comentario no puede tener más de 100 caracteres');
+      return;
+    }
+    
+    setIsCommenting(true);
+    try {
+      if (currentUserComment && isEditingComment) {
+        // Update existing comment
+        await updateComment(String(video.id), currentUserComment.id, commentText.trim());
+        setIsEditingComment(false);
+      } else {
+        // Create new comment
+        await createComment(String(video.id), commentText.trim());
+      }
+      setCommentText('');
+    } catch (error) {
+      console.error('Error handling comment:', error);
+    } finally {
+      setIsCommenting(false);
+    }
+  };
+
+  /**
+   * Handles comment deletion with user confirmation.
+   * Clears the comment text and exits edit mode after deletion.
+   */
+  const handleDeleteComment = async () => {
+    if (!video || !currentUserComment) return;
+    
+    if (!confirm('¿Estás seguro de que quieres eliminar tu comentario?')) {
+      return;
+    }
+    
+    setIsCommenting(true);
+    try {
+      await deleteComment(String(video.id), currentUserComment.id);
+      setCommentText('');
+      setIsEditingComment(false);
+    } catch (error) {
+      console.error('Error deleting comment:', error);
+    } finally {
+      setIsCommenting(false);
+    }
+  };
+
+  /**
+   * Cancels comment editing mode and clears the input field.
+   */
+  const handleCancelEdit = () => {
+    setIsEditingComment(false);
+    setCommentText('');
   };
 
   const handleBackdropClick = (event: React.MouseEvent) => {
@@ -363,6 +456,137 @@ export function VideoOverlay({
                   ({stats.count} calificación{stats.count !== 1 ? 'es' : ''})
                 </span>
               </div>
+            )}
+          </div>
+
+          {/* Comments Section */}
+          <div className={styles['overlay__comments-section']}>
+            <h3 className={styles['overlay__comments-title']}>
+              Comentarios ({comments.length})
+            </h3>
+
+            {/* Add/Edit Comment Form */}
+            {(!currentUserComment || isEditingComment) && (
+              <div className={styles['overlay__comment-form']}>
+                <textarea
+                  className={styles['overlay__comment-input']}
+                  value={commentText}
+                  onChange={(e) => setCommentText(e.target.value)}
+                  placeholder="Escribe tu comentario (5-100 caracteres)..."
+                  maxLength={100}
+                  disabled={isCommenting}
+                  aria-label="Comentario"
+                />
+                <div className={styles['overlay__comment-actions']}>
+                  <span className={styles['overlay__comment-counter']}>
+                    {commentText.length}/100
+                  </span>
+                  <div className={styles['overlay__comment-buttons']}>
+                    {isEditingComment && (
+                      <button
+                        className={styles['overlay__comment-cancel']}
+                        onClick={handleCancelEdit}
+                        disabled={isCommenting}
+                      >
+                        Cancelar
+                      </button>
+                    )}
+                    <button
+                      className={styles['overlay__comment-submit']}
+                      onClick={handleCommentSubmit}
+                      disabled={isCommenting || commentText.trim().length < 5}
+                    >
+                      {isCommenting ? 'Enviando...' : (isEditingComment ? 'Actualizar' : 'Comentar')}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* User's Existing Comment */}
+            {currentUserComment && !isEditingComment && (
+              <div className={styles['overlay__comment-item'] + ' ' + styles['overlay__comment-item--own']}>
+                <div className={styles['overlay__comment-header']}>
+                  <div className={styles['overlay__comment-author-wrapper']}>
+                    <span className={styles['overlay__comment-author']}>Tú</span>
+                    {currentUserComment.rating && (
+                      <div className={styles['overlay__comment-rating']}>
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <span 
+                            key={star}
+                            className={`${styles['overlay__comment-star']} ${star <= (currentUserComment.rating || 0) ? styles['overlay__comment-star--filled'] : ''}`}
+                          >
+                            ★
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                  <span className={styles['overlay__comment-date']}>
+                    {new Date(currentUserComment.createdAt).toLocaleDateString()}
+                  </span>
+                </div>
+                <p className={styles['overlay__comment-content']}>
+                  {currentUserComment.content}
+                </p>
+                <div className={styles['overlay__comment-actions-buttons']}>
+                  <button
+                    className={styles['overlay__comment-edit']}
+                    onClick={() => setIsEditingComment(true)}
+                    disabled={isCommenting}
+                  >
+                    Editar
+                  </button>
+                  <button
+                    className={styles['overlay__comment-delete']}
+                    onClick={handleDeleteComment}
+                    disabled={isCommenting}
+                  >
+                    Eliminar
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Other Users' Comments */}
+            <div className={styles['overlay__comments-list']}>
+              {comments
+                .filter(comment => comment.userId !== user?.id)
+                .map((comment) => (
+                  <div key={comment.id} className={styles['overlay__comment-item']}>
+                    <div className={styles['overlay__comment-header']}>
+                      <div className={styles['overlay__comment-author-wrapper']}>
+                        <span className={styles['overlay__comment-author']}>
+                          {comment.username || 'Usuario'}
+                        </span>
+                        {comment.rating && (
+                          <div className={styles['overlay__comment-rating']}>
+                            {[1, 2, 3, 4, 5].map((star) => (
+                              <span 
+                                key={star}
+                                className={`${styles['overlay__comment-star']} ${star <= (comment.rating || 0) ? styles['overlay__comment-star--filled'] : ''}`}
+                              >
+                                ★
+                              </span>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                      <span className={styles['overlay__comment-date']}>
+                        {new Date(comment.createdAt).toLocaleDateString()}
+                      </span>
+                    </div>
+                    <p className={styles['overlay__comment-content']}>
+                      {comment.content}
+                    </p>
+                  </div>
+                ))}
+            </div>
+
+            {comments.filter(c => c.userId !== user?.id).length === 0 && !currentUserComment && (
+              <p className={styles['overlay__no-comments']}>
+                Sé el primero en comentar esta película
+              </p>
             )}
           </div>
         </div>
