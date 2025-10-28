@@ -30,7 +30,8 @@ export function VideoPlayer({
   const [volume, setVolume] = useState(0.7); // Volumen inicial 70%
   const [isMuted, setIsMuted] = useState(false); // NO silenciado por defecto
   const [isLoading, setIsLoading] = useState(true);
-  const [showSubtitles, setShowSubtitles] = useState(false);
+  const [subtitleLanguage, setSubtitleLanguage] = useState<'off' | 'es' | 'en'>('off');
+  const [showSubtitleMenu, setShowSubtitleMenu] = useState(false);
   const [isDraggingVolume, setIsDraggingVolume] = useState(false);
   const [showControls, setShowControls] = useState(true);
   const hideTimerRef = useRef<number | null>(null);
@@ -69,16 +70,18 @@ export function VideoPlayer({
   ]);
 
   /**
-   * Returns the VTT subtitle path for a given video.
+   * Returns the VTT subtitle path for a given video and language.
    * Homepage videos get specific subtitles, others get generic ones.
+   * Returns null if subtitles are turned off.
    */
-  const getSubtitleSrc = (video: Video): string | null => {
-    if (!video) return null;
+  const getSubtitleSrc = (video: Video, lang: 'off' | 'es' | 'en'): string | null => {
+    if (!video || lang === 'off') return null;
+    const suffix = lang === 'en' ? '-en' : '';
     if (homepageSubtitleIds.has(video.id)) {
-      return `/subtitles/subtitulos-${video.id}.vtt`;
+      return `/subtitles/subtitulos-${video.id}${suffix}.vtt`;
     }
     // All other videos get generic subtitles
-    return '/subtitles/subtitulos-genericos.vtt';
+    return `/subtitles/subtitulos-genericos${suffix}.vtt`;
   };
 
   // Reset state when video changes
@@ -87,7 +90,8 @@ export function VideoPlayer({
       setIsPlaying(false);
       setCurrentTime(0);
       setIsLoading(true);
-      setShowSubtitles(false);
+      setSubtitleLanguage('off');
+      setShowSubtitleMenu(false);
     }
   }, [video, isOpen]);
 
@@ -101,12 +105,28 @@ export function VideoPlayer({
 
     const tracks = videoElement.textTracks;
     if (tracks.length > 0 && tracks[0]) {
-      tracks[0].mode = showSubtitles ? 'showing' : 'hidden';
+      const track = tracks[0];
+      const showSubtitles = subtitleLanguage !== 'off';
+      track.mode = showSubtitles ? 'showing' : 'hidden';
+      
       if (showSubtitles) {
-        adjustSubtitlePosition(videoElement, showControls ? -5 : -2);
+        // Adjust position immediately
+        adjustSubtitlePosition(videoElement, showControls ? -4 : -2);
+        
+        // Also listen for when cues are loaded (when language changes)
+        const handleCueChange = () => {
+          adjustSubtitlePosition(videoElement, showControls ? -4 : -2);
+        };
+        
+        track.addEventListener('cuechange', handleCueChange);
+        
+        // Cleanup
+        return () => {
+          track.removeEventListener('cuechange', handleCueChange);
+        };
       }
     }
-  }, [showSubtitles]);
+  }, [subtitleLanguage, showControls]);
 
   /**
    * Adjust subtitle vertical position. Negative line values move the cue up.
@@ -361,13 +381,16 @@ export function VideoPlayer({
   }
 
   const videoSource = getVideoSource(video);
-  const subtitleSrc = getSubtitleSrc(video);
+  const subtitleSrc = getSubtitleSrc(video, subtitleLanguage);
 
   return (
     <div 
       className={`${styles['video-player']} ${!showControls ? styles['hide-cursor'] : ''} ${className}`}
       onClick={(e) => e.target === e.currentTarget && onClose()}
       onMouseMove={handleMouseMove}
+      role="dialog"
+      aria-label="Reproductor de video"
+      aria-modal="true"
     >
       <div className={`${styles['video-player__container']} ${!showControls ? styles['video-player__container--controls-hidden'] : ''}`}>
         {/* Close button */}
@@ -393,6 +416,7 @@ export function VideoPlayer({
           muted={isMuted}
           onClick={handlePlayPause}
           onMouseMove={handleMouseMove}
+          aria-label={`Video: ${getVideoTitle(video)}`}
           onLoadedMetadata={(e) => {
             const video = e.currentTarget;
             setDuration(video.duration);
@@ -409,7 +433,6 @@ export function VideoPlayer({
                 const track = tracksAny && tracksAny[0] as TextTrack | undefined;
                 if (track) track.mode = 'hidden';
               }
-              setShowSubtitles(false);
             } catch {}
           }}
           onTimeUpdate={(e) => setCurrentTime(e.currentTarget.currentTime)}
@@ -428,12 +451,13 @@ export function VideoPlayer({
           }}
           crossOrigin="anonymous"
         >
-          {subtitleSrc && (
+          {subtitleSrc && subtitleLanguage !== 'off' && (
             <track
+              key={subtitleSrc}
               ref={trackRef}
               kind="subtitles"
-              label="Español"
-              srcLang="es"
+              label={subtitleLanguage === 'es' ? 'Español' : 'English'}
+              srcLang={subtitleLanguage}
               src={subtitleSrc}
             />
           )}
@@ -448,15 +472,32 @@ export function VideoPlayer({
         )}
 
         {/* Controls */}
-        <div className={styles['video-player__controls']}>
+        <div className={styles['video-player__controls']} role="group" aria-label="Controles del reproductor">
           {/* Progress bar */}
           <div 
             className={styles['video-player__progress']}
             onClick={handleProgressClick}
+            role="slider"
+            aria-label="Barra de progreso del video"
+            aria-valuemin={0}
+            aria-valuemax={duration}
+            aria-valuenow={currentTime}
+            aria-valuetext={`${formatTime(currentTime)} de ${formatTime(duration)}`}
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                handleSeek(-10);
+              } else if (e.key === 'ArrowRight') {
+                e.preventDefault();
+                handleSeek(10);
+              }
+            }}
           >
             <div 
               className={styles['video-player__progress-filled']}
               style={{ width: `${(currentTime / duration) * 100}%` }}
+              aria-hidden="true"
             />
           </div>
 
@@ -493,7 +534,10 @@ export function VideoPlayer({
               </button>
 
               {/* Time */}
-              <span className={styles['video-player__time']}>
+              <span 
+                className={styles['video-player__time']}
+                aria-label={`Tiempo transcurrido: ${formatTime(currentTime)} de ${formatTime(duration)}`}
+              >
                 {formatTime(currentTime)} / {formatTime(duration)}
               </span>
             </div>
@@ -520,6 +564,13 @@ export function VideoPlayer({
                 <div 
                   ref={volumeTrackRef}
                   className={styles['video-player__volume-track']}
+                  role="slider"
+                  aria-label="Control de volumen"
+                  aria-valuemin={0}
+                  aria-valuemax={100}
+                  aria-valuenow={Math.round(volume * 100)}
+                  aria-valuetext={`Volumen ${Math.round(volume * 100)}%`}
+                  tabIndex={0}
                   onMouseDown={(e) => {
                     e.preventDefault();
                     setIsDraggingVolume(true);
@@ -534,26 +585,81 @@ export function VideoPlayer({
                       setIsMuted(pos === 0);
                     }
                   }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
+                      e.preventDefault();
+                      adjustVolume(-0.05);
+                    } else if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
+                      e.preventDefault();
+                      adjustVolume(0.05);
+                    }
+                  }}
                 >
                   <div 
                     className={styles['video-player__volume-filled']}
                     style={{ width: `${volume * 100}%` }}
+                    aria-hidden="true"
                   />
                 </div>
               </div>
 
-              {/* Subtitles - Always show button */}
-              <button
-                className={`${styles['video-player__button']} ${showSubtitles ? styles['active'] : ''}`}
-                onClick={() => setShowSubtitles(!showSubtitles)}
-                aria-label={showSubtitles ? 'Ocultar subtítulos' : 'Mostrar subtítulos'}
-                title={showSubtitles ? 'Ocultar subtítulos' : 'Mostrar subtítulos'}
-              >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zM4 12h4v2H4v-2zm10 6H4v-2h10v2zm6 0h-4v-2h4v2zm0-4H10v-2h10v2z"/>
-                </svg>
-              </button>
-              {/* Keep subtitle position adjusted when toggling (handled in effect) */}
+              {/* Subtitle Language Dropdown */}
+              <div className={styles['video-player__subtitle-dropdown']}>
+                <button
+                  className={`${styles['video-player__button']} ${subtitleLanguage !== 'off' ? styles['active'] : ''}`}
+                  onClick={() => setShowSubtitleMenu(!showSubtitleMenu)}
+                  aria-label={`Subtítulos: ${subtitleLanguage === 'off' ? 'Apagados' : subtitleLanguage === 'es' ? 'Español' : 'English'}`}
+                  aria-expanded={showSubtitleMenu}
+                  aria-haspopup="menu"
+                  title="Subtítulos"
+                >
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zM4 12h4v2H4v-2zm10 6H4v-2h10v2zm6 0h-4v-2h4v2zm0-4H10v-2h10v2z"/>
+                  </svg>
+                </button>
+                
+                {showSubtitleMenu && (
+                  <div 
+                    className={styles['video-player__subtitle-menu']}
+                    role="menu"
+                    aria-label="Opciones de subtítulos"
+                  >
+                    <button
+                      className={`${styles['video-player__subtitle-option']} ${subtitleLanguage === 'off' ? styles['selected'] : ''}`}
+                      onClick={() => {
+                        setSubtitleLanguage('off');
+                        setShowSubtitleMenu(false);
+                      }}
+                      role="menuitem"
+                      aria-label="Desactivar subtítulos"
+                    >
+                      Apagado
+                    </button>
+                    <button
+                      className={`${styles['video-player__subtitle-option']} ${subtitleLanguage === 'es' ? styles['selected'] : ''}`}
+                      onClick={() => {
+                        setSubtitleLanguage('es');
+                        setShowSubtitleMenu(false);
+                      }}
+                      role="menuitem"
+                      aria-label="Activar subtítulos en español"
+                    >
+                      Español
+                    </button>
+                    <button
+                      className={`${styles['video-player__subtitle-option']} ${subtitleLanguage === 'en' ? styles['selected'] : ''}`}
+                      onClick={() => {
+                        setSubtitleLanguage('en');
+                        setShowSubtitleMenu(false);
+                      }}
+                      role="menuitem"
+                      aria-label="Activar subtítulos en inglés"
+                    >
+                      English
+                    </button>
+                  </div>
+                )}
+              </div>
 
               {/* Fullscreen */}
               <button
