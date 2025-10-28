@@ -38,7 +38,7 @@ export function VideoOverlay({
   const currentUserRating = video ? userRating[String(video.id)] : null;
   const stats = video ? videoStats[String(video.id)] : null;
   
-  // Load ratings when overlay opens
+  // Load ratings when overlay opens.
   useEffect(() => {
     if (isOpen && video) {
       getUserRating(String(video.id));
