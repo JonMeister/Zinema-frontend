@@ -30,6 +30,10 @@
   @media (max-width: $bp-md) {
     margin-top: -2rem; // Smaller overlap on mobile
   }
+
+  &--no-overlap {
+    margin-top: 0; // Remove overlap when searching (no featured hero)
+  }
 }
 
 .error {
@@ -44,6 +48,28 @@
     margin: 0;
     color: #ff6b6b;
     font-weight: $font-weight-medium;
+  }
+}
+
+.no-results {
+  padding: $space-8 $space-4;
+  text-align: center;
+  
+  p {
+    margin: 0;
+    color: $text-ghost;
+    font-size: 1.25rem;
+    font-weight: $font-weight-medium;
+  }
+}
+
+.search-section {
+  padding: $space-6 $space-4;
+  max-width: 800px;
+  margin: 0 auto;
+  
+  @media (max-width: $bp-md) {
+    padding: $space-4 $space-4;
   }
 }
 
