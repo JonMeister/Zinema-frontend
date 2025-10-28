@@ -1,3 +1,6 @@
+@use '../../../styles/tokens' as *;
+@use '../../../styles/mixins' as *;
+
 // Variables (usando las mismas del proyecto)
 $color-primary: #8b5cf6;
 $color-secondary: #a855f7;
@@ -162,7 +165,7 @@ $bp-sm: 640px;
 }
 
 .overlay__description {
-  font-size: $font-size-base;
+  font-size: $font-size-md;
   color: $text-secondary;
   margin: 0;
   line-height: 1.5;
@@ -202,7 +205,7 @@ $bp-sm: 640px;
   gap: $space-2;
   padding: $space-3 $space-6;
   border-radius: $radius-md;
-  font-size: $font-size-base;
+  font-size: $font-size-md;
   font-weight: $font-weight-semibold;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -267,17 +270,18 @@ $bp-sm: 640px;
 // Rating section
 .overlay__rating {
   display: flex;
-  align-items: center;
+  flex-direction: column;
   gap: $space-3;
   padding: $space-4;
   background: $color-surface-hover;
   border-radius: $radius-md;
+}
 
-  @media (max-width: $bp-sm) {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: $space-2;
-  }
+.overlay__rating-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $space-2;
 }
 
 .overlay__rating-label {
@@ -285,6 +289,82 @@ $bp-sm: 640px;
   font-weight: $font-weight-medium;
   color: $text-secondary;
   white-space: nowrap;
+}
+
+.overlay__rating-actions {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+}
+
+.overlay__rating-edit,
+.overlay__rating-cancel {
+  background: transparent;
+  border: none;
+  color: $color-accent;
+  cursor: pointer;
+  padding: $space-1 $space-2;
+  border-radius: $radius-sm;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: $space-1;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+
+  &:hover:not(:disabled) {
+    background: $color-primary-light;
+    color: $color-primary;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.overlay__rating-cancel {
+  color: $text-secondary;
+
+  &:hover:not(:disabled) {
+    background: $color-surface-hover;
+    color: $text-primary;
+  }
+}
+
+.overlay__rating-clear {
+  background: transparent;
+  border: none;
+  color: $text-muted;
+  cursor: pointer;
+  padding: $space-1 $space-2;
+  border-radius: $radius-sm;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: $space-1;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+
+  &:hover:not(:disabled) {
+    color: $color-error;
+    background: $color-error-light;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
 }
 
 .overlay__stars {
@@ -301,9 +381,27 @@ $bp-sm: 640px;
   border-radius: $radius-sm;
   transition: all 0.2s ease;
 
-  &:hover {
+  &:hover:not(:disabled) {
     color: #fbbf24; // Gold color for stars
     transform: scale(1.1);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  &--filled {
+    color: #fbbf24; // Gold color for filled stars
+  }
+
+  &--disabled {
+    cursor: default;
+    opacity: 0.7;
+
+    &:hover {
+      transform: none;
+    }
   }
 
   &:focus {
@@ -312,9 +410,240 @@ $bp-sm: 640px;
   }
 
   svg {
-    width: 20px;
-    height: 20px;
+    width: 24px;
+    height: 24px;
   }
+}
+
+.overlay__rating-stats {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  font-size: $font-size-sm;
+  color: $text-secondary;
+  margin-top: $space-1;
+}
+
+.overlay__rating-average {
+  font-weight: $font-weight-semibold;
+  color: #fbbf24;
+}
+
+.overlay__rating-count {
+  color: $text-muted;
+}
+
+// Comments Section
+.overlay__comments-section {
+  margin-top: $space-6;
+  padding: $space-4;
+  background: $color-surface;
+  border-radius: $radius-md;
+}
+
+.overlay__comments-title {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $text-primary;
+  margin: 0 0 $space-4 0;
+}
+
+// Comment Form
+.overlay__comment-form {
+  margin-bottom: $space-4;
+  padding: $space-4;
+  background: $color-surface-hover;
+  border-radius: $radius-md;
+}
+
+.overlay__comment-input {
+  width: 100%;
+  min-height: 80px;
+  padding: $space-3;
+  background: $color-bg;
+  border: 1px solid $color-border;
+  border-radius: $radius-sm;
+  color: $text-primary;
+  font-family: inherit;
+  font-size: $font-size-md;
+  resize: vertical;
+  transition: border-color 0.2s ease;
+
+  &:focus {
+    outline: none;
+    border-color: $color-primary;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  &::placeholder {
+    color: $text-ghost;
+  }
+}
+
+.overlay__comment-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: $space-2;
+}
+
+.overlay__comment-counter {
+  font-size: $font-size-sm;
+  color: $text-secondary;
+}
+
+.overlay__comment-buttons {
+  display: flex;
+  gap: $space-2;
+}
+
+.overlay__comment-submit,
+.overlay__comment-cancel {
+  padding: $space-2 $space-4;
+  border-radius: $radius-sm;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  transition: all 0.2s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.overlay__comment-submit {
+  background: $color-primary;
+  color: $color-button-text;
+
+  &:hover:not(:disabled) {
+    background: $color-primary-dark;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.overlay__comment-cancel {
+  background: transparent;
+  color: $text-secondary;
+  border: 1px solid $color-border;
+
+  &:hover:not(:disabled) {
+    background: $color-surface-hover;
+    color: $text-primary;
+  }
+}
+
+// Comment Item
+.overlay__comment-item {
+  padding: $space-3;
+  margin-bottom: $space-3;
+  background: $color-surface-hover;
+  border-radius: $radius-md;
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
+
+  &--own {
+    border-color: $color-accent;
+    background: rgba($color-accent, 0.05);
+  }
+}
+
+.overlay__comment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $space-2;
+}
+
+.overlay__comment-author-wrapper {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+}
+
+.overlay__comment-author {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: $text-primary;
+}
+
+.overlay__comment-rating {
+  display: flex;
+  gap: 2px;
+}
+
+.overlay__comment-star {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.2);
+  transition: color 0.2s ease;
+  
+  &--filled {
+    color: #fbbf24;
+  }
+}
+
+.overlay__comment-date {
+  font-size: $font-size-xs;
+  color: $text-ghost;
+}
+
+.overlay__comment-content {
+  margin: 0;
+  font-size: $font-size-md;
+  color: $text-secondary;
+  line-height: 1.5;
+  word-wrap: break-word;
+}
+
+.overlay__comment-actions-buttons {
+  display: flex;
+  gap: $space-2;
+  margin-top: $space-3;
+}
+
+.overlay__comment-edit,
+.overlay__comment-delete {
+  padding: $space-1 $space-3;
+  border-radius: $radius-sm;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  transition: all 0.2s ease;
+  border: none;
+  cursor: pointer;
+  background: transparent;
+}
+
+.overlay__comment-edit {
+  color: $color-accent;
+
+  &:hover:not(:disabled) {
+    background: rgba($color-accent, 0.1);
+  }
+}
+
+.overlay__comment-delete {
+  color: $color-error;
+
+  &:hover:not(:disabled) {
+    background: rgba($color-error, 0.1);
+  }
+}
+
+.overlay__comments-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.overlay__no-comments {
+  text-align: center;
+  padding: $space-8 $space-4;
+  color: $text-ghost;
+  font-size: $font-size-md;
+  font-style: italic;
 }
 
 // Responsive adjustments

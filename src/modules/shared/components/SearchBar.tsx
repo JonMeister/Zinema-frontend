@@ -3,13 +3,15 @@ import styles from './SearchBar.module.scss';
 
 interface SearchBarProps {
   onSearch: (query: string) => void;
+  onEmpty?: () => void;
   loading?: boolean;
   placeholder?: string;
   className?: string;
 }
 
 export function SearchBar({ 
-  onSearch, 
+  onSearch,
+  onEmpty,
   loading = false, 
   placeholder = "Buscar películas, series...",
   className = ''
@@ -27,8 +29,21 @@ export function SearchBar({
 
   const handleClear = () => {
     setQuery('');
+    if (onEmpty) {
+      onEmpty();
+    }
     if (inputRef.current) {
       inputRef.current.focus();
+    }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value;
+    setQuery(newValue);
+    
+    // If the field becomes empty, call onEmpty
+    if (!newValue.trim() && onEmpty) {
+      onEmpty();
     }
   };
 
@@ -77,7 +92,7 @@ export function SearchBar({
             ref={inputRef}
             type="text"
             value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={handleChange}
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
             onKeyDown={handleKeyDown}

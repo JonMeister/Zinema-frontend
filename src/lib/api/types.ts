@@ -91,3 +91,97 @@ export interface CategoriesResponse {
 export interface ApiError {
   message: string;
 }
+
+/**
+ * Rating information
+ */
+export interface Rating {
+  id: string;
+  userId: string;
+  videoId: string;
+  stars: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+/**
+ * Response from rating endpoints
+ */
+export interface RatingResponse {
+  message: string;
+  rating?: {
+    id: string;
+    videoId: string;
+    stars?: number;
+    createdAt?: string;
+    updatedAt?: string;
+  };
+}
+
+/**
+ * Response from get ratings endpoint
+ */
+export interface RatingsResponse {
+  ratings: Rating[];
+  count: number;
+}
+
+/**
+ * Response from check rating endpoint
+ */
+export interface CheckRatingResponse {
+  isRating: boolean;
+  rating?: Rating;
+}
+
+/**
+ * Rating statistics for a video
+ */
+export interface RatingStats {
+  count: number;
+  average: number;
+}
+
+/**
+ * Comment information
+ */
+export interface Comment {
+  id: string;
+  userId: string;
+  username?: string;
+  videoId: string;
+  content: string;
+  rating?: number | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+/**
+ * Response from comment endpoints
+ */
+export interface CommentResponse {
+  message: string;
+  comment?: {
+    id: string;
+    videoId: string;
+    content?: string;
+    createdAt?: string;
+    updatedAt?: string;
+  };
+}
+
+/**
+ * Response from get comments endpoint
+ */
+export interface CommentsResponse {
+  comments: Comment[];
+  count: number;
+}
+
+/**
+ * Response from check comment endpoint
+ */
+export interface CheckCommentResponse {
+  isComment: boolean;
+  comment?: Comment;
+}

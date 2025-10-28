@@ -35,6 +35,10 @@ export function SignupPage(): JSX.Element {
   const [submitting, setSubmitting] = useState(false);
   /** Stores the last submission error message, if any. */
   const [error, setError] = useState<string | null>(null);
+  /** Inline per-field validation errors (real-time). */
+  const [fieldErrors, setFieldErrors] = useState<Partial<Record<keyof typeof formData, string>>>({});
+  /** Tracks which fields have been touched (for aria-invalid). */
+  const [touched, setTouched] = useState<Partial<Record<keyof typeof formData, boolean>>>({});
   /** Toast API for user feedback. */
   const { showToast } = useToast();
 
@@ -52,6 +56,76 @@ export function SignupPage(): JSX.Element {
       ...prev,
       [name]: value,
     }));
+    // Live-validate the changed field
+    setFieldErrors(prev => ({
+      ...prev,
+      [name]: validateField(name as keyof typeof formData, value, {
+        ...formData,
+        [name]: value,
+      }),
+    }));
+  };
+
+  /** Marks a field as touched and validates it. */
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setTouched(prev => ({ ...prev, [name]: true }));
+    setFieldErrors(prev => ({
+      ...prev,
+      [name]: validateField(name as keyof typeof formData, value, formData),
+    }));
+  };
+
+  /** Email regex for simple format validation. */
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  /** Validates a single field and returns an error message or undefined. */
+  const validateField = (
+    field: keyof typeof formData,
+    value: string,
+    data: typeof formData
+  ): string | undefined => {
+    switch (field) {
+      case 'firstName':
+        if (!value.trim()) return 'El nombre es obligatorio';
+        if (value.trim().length < 2) return 'El nombre debe tener al menos 2 caracteres';
+        return undefined;
+      case 'lastName':
+        if (!value.trim()) return 'El apellido es obligatorio';
+        if (value.trim().length < 2) return 'El apellido debe tener al menos 2 caracteres';
+        return undefined;
+      case 'age': {
+        if (!value) return 'La edad es obligatoria';
+        const n = Number(value);
+        if (!Number.isFinite(n)) return 'La edad debe ser un número';
+        if (n < 13 || n > 120) return 'La edad debe estar entre 13 y 120';
+        return undefined;
+      }
+      case 'email':
+        if (!value.trim()) return 'El correo es obligatorio';
+        if (!emailRegex.test(value.trim())) return 'Ingresa un correo válido';
+        return undefined;
+      case 'password':
+        if (!value) return 'La contraseña es obligatoria';
+        if (value.length < 8) return 'La contraseña debe tener mínimo 8 caracteres';
+        return undefined;
+      case 'confirmPassword':
+        if (!value) return 'Debes confirmar la contraseña';
+        if (value !== data.password) return 'Las contraseñas no coinciden';
+        return undefined;
+      default:
+        return undefined;
+    }
+  };
+
+  /** Validates the whole form. */
+  const validateAll = (data: typeof formData) => {
+    const next: Partial<Record<keyof typeof formData, string>> = {};
+    (Object.keys(data) as Array<keyof typeof formData>).forEach((key) => {
+      const msg = validateField(key, data[key], data);
+      if (msg) next[key] = msg;
+    });
+    return next;
   };
 
   /**
@@ -62,6 +136,23 @@ export function SignupPage(): JSX.Element {
     if (submitting) return;
     setSubmitting(true);
     setError(null);
+
+    // Validate before submit
+    const allErrors = validateAll(formData);
+    if (Object.keys(allErrors).length > 0) {
+      setFieldErrors(allErrors);
+      setTouched({
+        firstName: true,
+        lastName: true,
+        age: true,
+        email: true,
+        password: true,
+        confirmPassword: true,
+      });
+      setSubmitting(false);
+      showToast('Corrige los campos marcados', 'error');
+      return;
+    }
 
     const payload = {
       firstName: formData.firstName.trim(),
@@ -115,16 +206,22 @@ export function SignupPage(): JSX.Element {
                 name="firstName"
                 value={formData.firstName}
                 onChange={handleInputChange}
+                onBlur={handleBlur}
                 className={styles['formInput']}
                 required
                 aria-required="true"
                 aria-describedby="firstName-help"
-                aria-invalid={error ? 'true' : 'false'}
+                aria-invalid={touched.firstName && !!fieldErrors.firstName ? 'true' : 'false'}
                 placeholder="Ej: Juan"
               />
               <span id="firstName-help" className={styles['formHelp']} role="note">
                 Ingresa tu nombre de pila
               </span>
+              {touched.firstName && fieldErrors.firstName && (
+                <span id="firstName-error" className={styles['formHelp']} role="alert" style={{ color: '#ffb3b3' }}>
+                  {fieldErrors.firstName}
+                </span>
+              )}
             </div>
 
             <div className={styles['formGroup']}>
@@ -137,16 +234,22 @@ export function SignupPage(): JSX.Element {
                 name="lastName"
                 value={formData.lastName}
                 onChange={handleInputChange}
+                onBlur={handleBlur}
                 className={styles['formInput']}
                 required
                 aria-required="true"
                 aria-describedby="lastName-help"
-                aria-invalid={error ? 'true' : 'false'}
+                aria-invalid={touched.lastName && !!fieldErrors.lastName ? 'true' : 'false'}
                 placeholder="Ej: Pérez"
               />
               <span id="lastName-help" className={styles['formHelp']} role="note">
                 Ingresa tu apellido
               </span>
+              {touched.lastName && fieldErrors.lastName && (
+                <span id="lastName-error" className={styles['formHelp']} role="alert" style={{ color: '#ffb3b3' }}>
+                  {fieldErrors.lastName}
+                </span>
+              )}
             </div>
 
             <div className={styles['formGroup']}>
@@ -159,18 +262,24 @@ export function SignupPage(): JSX.Element {
                 name="age"
                 value={formData.age}
                 onChange={handleInputChange}
+                onBlur={handleBlur}
                 className={styles['formInput']}
                 required
                 aria-required="true"
                 min="13"
                 max="120"
                 aria-describedby="age-help"
-                aria-invalid={error ? 'true' : 'false'}
+                aria-invalid={touched.age && !!fieldErrors.age ? 'true' : 'false'}
                 placeholder="Ej: 25"
               />
               <span id="age-help" className={styles['formHelp']} role="note">
                 Debes tener al menos 13 años para crear una cuenta. El rango válido es de 13 a 120 años
               </span>
+              {touched.age && fieldErrors.age && (
+                <span id="age-error" className={styles['formHelp']} role="alert" style={{ color: '#ffb3b3' }}>
+                  {fieldErrors.age}
+                </span>
+              )}
             </div>
 
             <div className={styles['formGroup']}>
@@ -183,16 +292,22 @@ export function SignupPage(): JSX.Element {
                 name="email"
                 value={formData.email}
                 onChange={handleInputChange}
+                onBlur={handleBlur}
                 className={styles['formInput']}
                 required
                 aria-required="true"
                 aria-describedby="email-help"
-                aria-invalid={error ? 'true' : 'false'}
+                aria-invalid={touched.email && !!fieldErrors.email ? 'true' : 'false'}
                 placeholder="ejemplo@correo.com"
               />
               <span id="email-help" className={styles['formHelp']} role="note">
                 Usaremos este correo electrónico para tu cuenta y notificaciones
               </span>
+              {touched.email && fieldErrors.email && (
+                <span id="email-error" className={styles['formHelp']} role="alert" style={{ color: '#ffb3b3' }}>
+                  {fieldErrors.email}
+                </span>
+              )}
             </div>
 
             <div className={styles['formGroup']}>
@@ -205,16 +320,22 @@ export function SignupPage(): JSX.Element {
                 name="password"
                 value={formData.password}
                 onChange={handleInputChange}
+                onBlur={handleBlur}
                 className={styles['formInput']}
                 required
                 aria-required="true"
                 minLength={8}
                 aria-describedby="password-help"
-                aria-invalid={error ? 'true' : 'false'}
+                aria-invalid={touched.password && !!fieldErrors.password ? 'true' : 'false'}
               />
               <span id="password-help" className={styles['formHelp']} role="note">
                 La contraseña debe tener mínimo 8 caracteres. Se recomienda incluir mayúsculas, minúsculas, números y caracteres especiales
               </span>
+              {touched.password && fieldErrors.password && (
+                <span id="password-error" className={styles['formHelp']} role="alert" style={{ color: '#ffb3b3' }}>
+                  {fieldErrors.password}
+                </span>
+              )}
             </div>
 
             <div className={styles['formGroup']}>
@@ -227,16 +348,22 @@ export function SignupPage(): JSX.Element {
                 name="confirmPassword"
                 value={formData.confirmPassword}
                 onChange={handleInputChange}
+                onBlur={handleBlur}
                 className={styles['formInput']}
                 required
                 aria-required="true"
                 minLength={8}
                 aria-describedby="confirm-help"
-                aria-invalid={error ? 'true' : 'false'}
+                aria-invalid={touched.confirmPassword && !!fieldErrors.confirmPassword ? 'true' : 'false'}
               />
               <span id="confirm-help" className={styles['formHelp']} role="note">
                 Repite la contraseña para confirmar que coincide
               </span>
+              {touched.confirmPassword && fieldErrors.confirmPassword && (
+                <span id="confirm-error" className={styles['formHelp']} role="alert" style={{ color: '#ffb3b3' }}>
+                  {fieldErrors.confirmPassword}
+                </span>
+              )}
             </div>
 
             {error && (
