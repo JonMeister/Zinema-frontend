@@ -3,10 +3,12 @@
  * 
  * Provides play, pause, stop, and subtitle functionality for Pexels videos.
  * Includes custom controls overlay and keyboard shortcuts.
+ * Supports multiple subtitle languages (Spanish and English).
  */
 import React, { useRef, useState, useEffect } from 'react';
 import styles from './VideoPlayer.module.scss';
 import { Video } from '@/lib/api/types';
+import { SubtitleSelector, SubtitleLanguage } from './SubtitleSelector';
 
 interface VideoPlayerProps {
   video: Video | null;
@@ -24,13 +26,14 @@ export function VideoPlayer({
   const videoRef = useRef<HTMLVideoElement>(null);
   const volumeTrackRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLTrackElement>(null);
+  const trackEnRef = useRef<HTMLTrackElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [volume, setVolume] = useState(0.7); // Volumen inicial 70%
   const [isMuted, setIsMuted] = useState(false); // NO silenciado por defecto
   const [isLoading, setIsLoading] = useState(true);
-  const [showSubtitles, setShowSubtitles] = useState(false);
+  const [subtitleLanguage, setSubtitleLanguage] = useState<SubtitleLanguage>('off');
   const [isDraggingVolume, setIsDraggingVolume] = useState(false);
 
   // Get video source URL
@@ -67,12 +70,13 @@ export function VideoPlayer({
   ]);
 
   /**
-   * Returns the VTT subtitle path for a given video if available.
+   * Returns the VTT subtitle path for a given video and language if available.
    */
-  const getSubtitleSrc = (video: Video): string | null => {
-    if (!video) return null;
+  const getSubtitleSrc = (video: Video, lang: SubtitleLanguage): string | null => {
+    if (!video || lang === 'off') return null;
     if (homepageSubtitleIds.has(video.id)) {
-      return `/subtitles/subtitulos-${video.id}.vtt`;
+      const suffix = lang === 'en' ? '-en' : '';
+      return `/subtitles/subtitulos-${video.id}${suffix}.vtt`;
     }
     return null;
   };
@@ -83,26 +87,36 @@ export function VideoPlayer({
       setIsPlaying(false);
       setCurrentTime(0);
       setIsLoading(true);
-      setShowSubtitles(false);
+      setSubtitleLanguage('off');
     }
   }, [video, isOpen]);
 
   /**
-   * Effect to handle subtitle track visibility.
-   * Controls the 'mode' of the text track element to show/hide subtitles.
+   * Effect to handle subtitle track visibility and language switching.
+   * Controls the 'mode' of the text track elements to show/hide subtitles.
    */
   useEffect(() => {
     const videoElement = videoRef.current;
     if (!videoElement) return;
 
     const tracks = videoElement.textTracks;
-    if (tracks.length > 0 && tracks[0]) {
-      tracks[0].mode = showSubtitles ? 'showing' : 'hidden';
-      if (showSubtitles) {
+    
+    // Disable all tracks first
+    for (let i = 0; i < tracks.length; i++) {
+      if (tracks[i]) {
+        tracks[i].mode = 'hidden';
+      }
+    }
+
+    // Enable the selected language track
+    if (subtitleLanguage !== 'off') {
+      const trackIndex = subtitleLanguage === 'es' ? 0 : 1;
+      if (tracks[trackIndex]) {
+        tracks[trackIndex].mode = 'showing';
         adjustSubtitlePosition(videoElement);
       }
     }
-  }, [showSubtitles]);
+  }, [subtitleLanguage]);
 
   /**
    * Raise subtitles above the custom control bar by moving the cue line
@@ -318,7 +332,9 @@ export function VideoPlayer({
   }
 
   const videoSource = getVideoSource(video);
-  const subtitleSrc = getSubtitleSrc(video);
+  const subtitleSrcEs = getSubtitleSrc(video, 'es');
+  const subtitleSrcEn = getSubtitleSrc(video, 'en');
+  const hasSubtitles = subtitleSrcEs !== null;
 
   return (
     <div 
@@ -360,11 +376,13 @@ export function VideoPlayer({
             try {
               const el = videoRef.current;
               if (el && el.textTracks) {
-                const tracksAny = el.textTracks as any;
-                const track = tracksAny && tracksAny[0] as TextTrack | undefined;
-                if (track) track.mode = 'hidden';
+                for (let i = 0; i < el.textTracks.length; i++) {
+                  if (el.textTracks[i]) {
+                    el.textTracks[i].mode = 'hidden';
+                  }
+                }
               }
-              setShowSubtitles(false);
+              setSubtitleLanguage('off');
             } catch {}
           }}
           onTimeUpdate={(e) => setCurrentTime(e.currentTarget.currentTime)}
@@ -383,13 +401,22 @@ export function VideoPlayer({
           }}
           crossOrigin="anonymous"
         >
-          {subtitleSrc && (
+          {subtitleSrcEs && (
             <track
               ref={trackRef}
               kind="subtitles"
               label="Español"
               srcLang="es"
-              src={subtitleSrc}
+              src={subtitleSrcEs}
+            />
+          )}
+          {subtitleSrcEn && (
+            <track
+              ref={trackEnRef}
+              kind="subtitles"
+              label="English"
+              srcLang="en"
+              src={subtitleSrcEn}
             />
           )}
         </video>
@@ -497,18 +524,13 @@ export function VideoPlayer({
                 </div>
               </div>
 
-              {/* Subtitles - Always show button */}
-              <button
-                className={`${styles['video-player__button']} ${showSubtitles ? styles['active'] : ''}`}
-                onClick={() => setShowSubtitles(!showSubtitles)}
-                aria-label={showSubtitles ? 'Ocultar subtítulos' : 'Mostrar subtítulos'}
-                title={showSubtitles ? 'Ocultar subtítulos' : 'Mostrar subtítulos'}
-              >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zM4 12h4v2H4v-2zm10 6H4v-2h10v2zm6 0h-4v-2h4v2zm0-4H10v-2h10v2z"/>
-                </svg>
-              </button>
-              {/* Keep subtitle position adjusted when toggling (handled in effect) */}
+              {/* Subtitles - Show selector if subtitles are available */}
+              {hasSubtitles && (
+                <SubtitleSelector
+                  currentLanguage={subtitleLanguage}
+                  onLanguageChange={setSubtitleLanguage}
+                />
+              )}
 
               {/* Fullscreen */}
               <button
