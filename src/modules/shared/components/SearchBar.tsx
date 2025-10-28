@@ -9,7 +9,7 @@ interface SearchBarProps {
   className?: string;
 }
 
-export function SearchBar({ 
+export default function SearchBar({ 
   onSearch,
   onEmpty,
   loading = false, 
@@ -139,6 +139,7 @@ export function SearchBar({
         </button>
       </form>
       
+      {/* Hide the shortcut hint on small screens */}
       <div id="search-help" className={styles['search-help']}>
         Presiona <kbd>Ctrl</kbd> + <kbd>K</kbd> para buscar rápidamente
       </div>

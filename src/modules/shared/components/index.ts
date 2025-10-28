@@ -9,4 +9,4 @@ export { Carousel } from './Carousel';
 export { VideoCard } from './VideoCard';
 export { VideoOverlay } from './VideoOverlay';
 export { VideoPlayer } from './VideoPlayer';
-export { SearchBar } from './SearchBar';
+export { default as SearchBar } from './SearchBar';

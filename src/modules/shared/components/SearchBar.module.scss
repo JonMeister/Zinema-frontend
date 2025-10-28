@@ -224,6 +224,8 @@ $bp-sm: 640px;
   .search-button {
     width: 100%;
     padding: $space-4;
+    min-height: 56px; // give more tap area and avoid clipping
+    margin-top: $space-2;
   }
   
   .search-input-wrapper {
@@ -236,8 +238,9 @@ $bp-sm: 640px;
     padding: 0 $space-2;
   }
   
+  // Hide shortcut hint on very small screens
   .search-help {
-    font-size: 0.75rem;
+    display: none;
   }
 }
 
