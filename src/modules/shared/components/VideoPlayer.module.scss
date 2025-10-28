@@ -218,6 +218,64 @@ $radius-lg: 0.75rem;
   }
 }
 
+// Subtitle dropdown container
+.video-player__subtitle-dropdown {
+  position: relative;
+}
+
+// Subtitle menu
+.video-player__subtitle-menu {
+  position: absolute;
+  bottom: 100%;
+  right: 0;
+  margin-bottom: $space-4;
+  background: rgba(0, 0, 0, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: $radius-md;
+  min-width: 140px;
+  padding: $space-2;
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+  z-index: 1000;
+  animation: slideUp 0.2s ease;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Subtitle option button
+.video-player__subtitle-option {
+  background: none;
+  border: none;
+  color: $text-primary;
+  cursor: pointer;
+  padding: $space-2 $space-3;
+  text-align: left;
+  border-radius: $radius-md;
+  transition: all 0.2s;
+  font-size: 0.875rem;
+  white-space: nowrap;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  &.selected {
+    background: rgba(139, 92, 246, 0.3);
+    color: $color-accent;
+    font-weight: 600;
+  }
+}
+
 .video-player__time {
   color: $text-primary;
   font-size: 0.875rem;
