@@ -23,6 +23,7 @@ export function VideoPlayer({
 }: VideoPlayerProps): JSX.Element {
   const videoRef = useRef<HTMLVideoElement>(null);
   const volumeTrackRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLTrackElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -55,14 +56,71 @@ export function VideoPlayer({
     return 'Video';
   };
 
+  /**
+   * IDs of homepage videos that have bundled subtitles.
+   */
+  const homepageSubtitleIds = new Set<number>([
+    6963395, 5386411, 7438482, 1526909, 1409899,
+    3163534, 2169880, 857251, 856973, 2098989,
+    1093662, 857195, 5329239, 1580455, 4057252,
+    3363552, 2480792, 6560039, 5322475, 1757800
+  ]);
+
+  /**
+   * Returns the VTT subtitle path for a given video if available.
+   */
+  const getSubtitleSrc = (video: Video): string | null => {
+    if (!video) return null;
+    if (homepageSubtitleIds.has(video.id)) {
+      return `/subtitles/subtitulos-${video.id}.vtt`;
+    }
+    return null;
+  };
+
   // Reset state when video changes
   useEffect(() => {
     if (isOpen && video) {
       setIsPlaying(false);
       setCurrentTime(0);
       setIsLoading(true);
+      setShowSubtitles(false);
     }
   }, [video, isOpen]);
+
+  /**
+   * Effect to handle subtitle track visibility.
+   * Controls the 'mode' of the text track element to show/hide subtitles.
+   */
+  useEffect(() => {
+    const videoElement = videoRef.current;
+    if (!videoElement) return;
+
+    const tracks = videoElement.textTracks;
+    if (tracks.length > 0 && tracks[0]) {
+      tracks[0].mode = showSubtitles ? 'showing' : 'hidden';
+      if (showSubtitles) {
+        adjustSubtitlePosition(videoElement);
+      }
+    }
+  }, [showSubtitles]);
+
+  /**
+   * Raise subtitles above the custom control bar by moving the cue line
+   * a few lines up from the bottom.
+   */
+  const adjustSubtitlePosition = (el: HTMLVideoElement | null) => {
+    if (!el) return;
+    const track = el.textTracks && el.textTracks[0];
+    if (!track) return;
+    const cues = track.cues;
+    if (!cues) return;
+    for (let i = 0; i < cues.length; i++) {
+      const cue = cues[i] as any; // VTTCue in browsers
+      if (cue && typeof cue.line !== 'undefined') {
+        cue.line = -4; // 4 lines above bottom
+      }
+    }
+  };
 
   // Handle volume dragging
   useEffect(() => {
@@ -115,6 +173,14 @@ export function VideoPlayer({
         case 'ArrowRight':
           e.preventDefault();
           handleSeek(10);
+          break;
+        case 'ArrowUp':
+          e.preventDefault();
+          adjustVolume(0.05);
+          break;
+        case 'ArrowDown':
+          e.preventDefault();
+          adjustVolume(-0.05);
           break;
         case 'f':
           e.preventDefault();
@@ -189,6 +255,22 @@ export function VideoPlayer({
     }
   };
 
+  const adjustVolume = (delta: number) => {
+    const video = videoRef.current;
+    if (!video) return;
+    const current = typeof video.volume === 'number' ? video.volume : volume;
+    const next = Math.max(0, Math.min(1, current + delta));
+    video.volume = next;
+    setVolume(next);
+    if (next === 0) {
+      video.muted = true;
+      setIsMuted(true);
+    } else {
+      video.muted = false;
+      setIsMuted(false);
+    }
+  };
+
   const handleMuteToggle = () => {
     const video = videoRef.current;
     if (!video) return;
@@ -236,6 +318,7 @@ export function VideoPlayer({
   }
 
   const videoSource = getVideoSource(video);
+  const subtitleSrc = getSubtitleSrc(video);
 
   return (
     <div 
@@ -271,6 +354,18 @@ export function VideoPlayer({
             video.volume = volume;
             video.muted = isMuted;
             setIsLoading(false);
+            // After metadata is ready, adjust subtitle cue positions
+            try { adjustSubtitlePosition(videoRef.current); } catch {}
+            // Ensure subtitles start hidden by default
+            try {
+              const el = videoRef.current;
+              if (el && el.textTracks) {
+                const tracksAny = el.textTracks as any;
+                const track = tracksAny && tracksAny[0] as TextTrack | undefined;
+                if (track) track.mode = 'hidden';
+              }
+              setShowSubtitles(false);
+            } catch {}
           }}
           onTimeUpdate={(e) => setCurrentTime(e.currentTarget.currentTime)}
           onPlay={() => setIsPlaying(true)}
@@ -286,8 +381,17 @@ export function VideoPlayer({
             setVolume(video.volume);
             setIsMuted(video.muted);
           }}
+          crossOrigin="anonymous"
         >
-          <track kind="subtitles" label="Español" />
+          {subtitleSrc && (
+            <track
+              ref={trackRef}
+              kind="subtitles"
+              label="Español"
+              srcLang="es"
+              src={subtitleSrc}
+            />
+          )}
         </video>
 
         {/* Loading indicator */}
@@ -393,16 +497,18 @@ export function VideoPlayer({
                 </div>
               </div>
 
-              {/* Subtitles */}
+              {/* Subtitles - Always show button */}
               <button
                 className={`${styles['video-player__button']} ${showSubtitles ? styles['active'] : ''}`}
                 onClick={() => setShowSubtitles(!showSubtitles)}
-                aria-label="Subtítulos"
+                aria-label={showSubtitles ? 'Ocultar subtítulos' : 'Mostrar subtítulos'}
+                title={showSubtitles ? 'Ocultar subtítulos' : 'Mostrar subtítulos'}
               >
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zM4 12h4v2H4v-2zm10 6H4v-2h10v2zm6 0h-4v-2h4v2zm0-4H10v-2h10v2z"/>
                 </svg>
               </button>
+              {/* Keep subtitle position adjusted when toggling (handled in effect) */}
 
               {/* Fullscreen */}
               <button

@@ -56,17 +56,13 @@ export const useMoviesStore = create<MoviesStore>()(
         const fiveMinutesAgo = Date.now() - (5 * 60 * 1000);
         
         if (lastFetchedAt && lastFetchedAt > fiveMinutesAgo && movies.length > 0) {
-          console.log('Using cached movies, no need to fetch');
           return;
         }
 
         // Get token from auth store
         const { token } = useAuthStore.getState();
         
-        console.log('fetchMovies called, token:', token ? 'present' : 'missing');
-        
         if (!token) {
-          console.log('No token, setting error');
           set({ 
             loading: false, 
             error: 'Usuario no autenticado' 
@@ -74,7 +70,6 @@ export const useMoviesStore = create<MoviesStore>()(
           return;
         }
 
-        console.log('Setting loading to true');
         set({ loading: true, error: null });
 
     try {
@@ -86,8 +81,6 @@ export const useMoviesStore = create<MoviesStore>()(
         3363552, 2480792, 6560039, 5322475, 1757800
       ];
 
-      console.log('Fetching videos by specific IDs');
-      
       // Fetch videos by their specific IDs
       const videoPromises = videoIds.map(id => videoService.getVideoById(id, token));
       const responses = await Promise.all(videoPromises);
@@ -96,8 +89,6 @@ export const useMoviesStore = create<MoviesStore>()(
       const allVideos = responses
         .filter(response => response && !('message' in response))
         .map(response => response as Video);
-      
-      console.log('Successfully fetched videos count:', allVideos.length);
       
       // Set movies and featured movie (first one)
       set({
@@ -108,7 +99,6 @@ export const useMoviesStore = create<MoviesStore>()(
         error: null,
       });
     } catch (err) {
-      console.log('Error in fetchMovies:', err);
       set({ 
         loading: false, 
         error: 'Error al cargar las películas' 
