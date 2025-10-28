@@ -37,6 +37,16 @@ export function Footer(): JSX.Element {
           <ul role="list" aria-labelledby="footer-links-heading">
             <li><a href="/about" aria-label="Ir a página sobre nosotros">Sobre Nosotros</a></li>
             <li><a href="/sitemap" aria-label="Ir a mapa del sitio">Mapa del Sitio</a></li>
+            <li>
+              <a
+                href="/pdf/MANUAL DE USUARIO ZINEMA.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Abrir Manual de Usuario en una nueva pestaña"
+              >
+                Manual de Usuario (PDF)
+              </a>
+            </li>
           </ul>
         </nav>
         
