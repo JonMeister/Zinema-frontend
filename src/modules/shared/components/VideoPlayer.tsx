@@ -32,6 +32,8 @@ export function VideoPlayer({
   const [isLoading, setIsLoading] = useState(true);
   const [showSubtitles, setShowSubtitles] = useState(false);
   const [isDraggingVolume, setIsDraggingVolume] = useState(false);
+  const [showControls, setShowControls] = useState(true);
+  const hideTimerRef = useRef<number | null>(null);
 
   // Get video source URL
   const getVideoSource = (video: Video): string => {
@@ -67,14 +69,16 @@ export function VideoPlayer({
   ]);
 
   /**
-   * Returns the VTT subtitle path for a given video if available.
+   * Returns the VTT subtitle path for a given video.
+   * Homepage videos get specific subtitles, others get generic ones.
    */
   const getSubtitleSrc = (video: Video): string | null => {
     if (!video) return null;
     if (homepageSubtitleIds.has(video.id)) {
       return `/subtitles/subtitulos-${video.id}.vtt`;
     }
-    return null;
+    // All other videos get generic subtitles
+    return '/subtitles/subtitulos-genericos.vtt';
   };
 
   // Reset state when video changes
@@ -99,16 +103,16 @@ export function VideoPlayer({
     if (tracks.length > 0 && tracks[0]) {
       tracks[0].mode = showSubtitles ? 'showing' : 'hidden';
       if (showSubtitles) {
-        adjustSubtitlePosition(videoElement);
+        adjustSubtitlePosition(videoElement, showControls ? -5 : -2);
       }
     }
   }, [showSubtitles]);
 
   /**
-   * Raise subtitles above the custom control bar by moving the cue line
-   * a few lines up from the bottom.
+   * Adjust subtitle vertical position. Negative line values move the cue up.
+   * Example: -5 sits above controls (when visible), -2 sits lower (when hidden).
    */
-  const adjustSubtitlePosition = (el: HTMLVideoElement | null) => {
+  const adjustSubtitlePosition = (el: HTMLVideoElement | null, line: number) => {
     if (!el) return;
     const track = el.textTracks && el.textTracks[0];
     if (!track) return;
@@ -117,7 +121,9 @@ export function VideoPlayer({
     for (let i = 0; i < cues.length; i++) {
       const cue = cues[i] as any; // VTTCue in browsers
       if (cue && typeof cue.line !== 'undefined') {
-        cue.line = -4; // 4 lines above bottom
+        cue.line = line;
+        cue.position = 50; // center horizontally
+        cue.align = 'center';
       }
     }
   };
@@ -157,6 +163,9 @@ export function VideoPlayer({
     if (!isOpen) return;
 
     const handleKeyPress = (e: KeyboardEvent) => {
+      // Any key shows controls
+      setShowControls(true);
+      resetHideTimer();
       switch (e.key) {
         case ' ':
           e.preventDefault();
@@ -196,6 +205,40 @@ export function VideoPlayer({
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
   }, [isOpen, isPlaying]);
+
+  // Auto-hide controls after inactivity
+  const resetHideTimer = () => {
+    if (hideTimerRef.current) {
+      window.clearTimeout(hideTimerRef.current);
+      hideTimerRef.current = null;
+    }
+    hideTimerRef.current = window.setTimeout(() => {
+      setShowControls(false);
+    }, 2000);
+  };
+
+  const handleMouseMove = () => {
+    setShowControls(true);
+    resetHideTimer();
+  };
+
+  useEffect(() => {
+    if (!isOpen) return;
+    // Start timer on open
+    setShowControls(true);
+    resetHideTimer();
+    return () => {
+      if (hideTimerRef.current) window.clearTimeout(hideTimerRef.current);
+    };
+  }, [isOpen]);
+
+  // Reposition subtitles when controls are shown/hidden
+  useEffect(() => {
+    if (!isOpen) return;
+    try {
+      adjustSubtitlePosition(videoRef.current, showControls ? -5 : -2);
+    } catch {}
+  }, [showControls, isOpen]);
 
   // Playback controls
   const handlePlayPause = () => {
@@ -322,10 +365,11 @@ export function VideoPlayer({
 
   return (
     <div 
-      className={`${styles['video-player']} ${className}`}
+      className={`${styles['video-player']} ${!showControls ? styles['hide-cursor'] : ''} ${className}`}
       onClick={(e) => e.target === e.currentTarget && onClose()}
+      onMouseMove={handleMouseMove}
     >
-      <div className={styles['video-player__container']}>
+      <div className={`${styles['video-player__container']} ${!showControls ? styles['video-player__container--controls-hidden'] : ''}`}>
         {/* Close button */}
         <button
           className={styles['video-player__close']}
@@ -348,6 +392,7 @@ export function VideoPlayer({
           poster={video.image}
           muted={isMuted}
           onClick={handlePlayPause}
+          onMouseMove={handleMouseMove}
           onLoadedMetadata={(e) => {
             const video = e.currentTarget;
             setDuration(video.duration);
@@ -355,7 +400,7 @@ export function VideoPlayer({
             video.muted = isMuted;
             setIsLoading(false);
             // After metadata is ready, adjust subtitle cue positions
-            try { adjustSubtitlePosition(videoRef.current); } catch {}
+            try { adjustSubtitlePosition(videoRef.current, showControls ? -5 : -2); } catch {}
             // Ensure subtitles start hidden by default
             try {
               const el = videoRef.current;
